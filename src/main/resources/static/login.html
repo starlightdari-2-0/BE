@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kakao Login Test</title>
+    <!-- Kakao JavaScript SDK -->
+    <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>
+        // Kakao SDK 초기화
+        function initializeKakao() {
+            Kakao.init('a9832ad51cb8e092ebc39ea43ef6f52a'); // Kakao JavaScript 키 입력
+            console.log(Kakao.isInitialized()); // SDK 초기화 확인
+        }
+
+        // Redirect URI에서 인증 코드 추출
+        function getAuthorizationCode() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('code'); // 인증 코드 추출
+        }
+
+        // Kakao Login
+        function loginWithKakao() {
+            Kakao.Auth.authorize({
+                redirectUri: 'http://localhost:8080/api/auth/kakao/callback', // Redirect URI (HTML 파일이 열리는 경로)
+            });
+        }
+
+        // 서버에 인증 코드 전송
+        function sendAuthorizationCodeToServer() {
+            const authCode = getAuthorizationCode();
+            if (!authCode) {
+                console.error("No authorization code found in URL.");
+                return;
+            }
+
+            fetch('http://localhost:8080/api/auth/kakao/callback', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ code: authCode }), // 인증 코드 전송
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log("Server Response:", data);
+                    alert("Login successful! JWT Token: " + data.token);
+                })
+                .catch(error => {
+                    console.error("Error during login:", error);
+                });
+        }
+    </script>
+</head>
+<body onload="initializeKakao(); sendAuthorizationCodeToServer();">
+<h1>Kakao Login Test</h1>
+<button onclick="loginWithKakao()">Login with Kakao</button>
+</body>
+</html>
