@@ -2,9 +2,11 @@ package com.example.startlight.memComReply.controller;
 
 import com.example.startlight.memComReply.dto.MemComReplyRepDto;
 import com.example.startlight.memComReply.dto.MemComReplyReqDto;
+import com.example.startlight.memComReply.dto.MemComReplyUpdateDto;
 import com.example.startlight.memComReply.entity.MemComReply;
 import com.example.startlight.memComReply.service.MemComReplyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,15 +30,15 @@ public class MemComReplyController {
             @RequestBody MemComReplyReqDto memComReplyReqDto
             ) {
         MemComReplyRepDto reply = memComReplyService.createReply(memComReplyReqDto);
-        return ResponseEntity.ok(reply);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reply);
     }
 
     @PatchMapping("/comment/reply/{replyId}")
     public ResponseEntity<MemComReplyRepDto> updateMemComReply(
             @PathVariable("replyId") Long replyId,
-            @RequestBody String content
-    ) {
-        MemComReplyRepDto reply = memComReplyService.updateReply(replyId, content);
+            @RequestBody MemComReplyUpdateDto updateDto
+            ) {
+        MemComReplyRepDto reply = memComReplyService.updateReply(replyId, updateDto.getContent());
         return ResponseEntity.ok(reply);
     }
 
@@ -45,7 +47,7 @@ public class MemComReplyController {
         memComReplyService.deleteReply(replyId);
         return ResponseEntity.noContent().build();
     }
-/
+
     @PostMapping("/comment/reply/{replyId}/like")
     public ResponseEntity<MemComReplyRepDto> likeMemComReply(@PathVariable("replyId") Long replyId) {
         MemComReply memComReply = memComReplyService.pressLike(replyId);
