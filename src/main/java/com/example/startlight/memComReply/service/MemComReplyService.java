@@ -23,7 +23,7 @@ public class MemComReplyService {
         MemComment memComment = memCommentDao.findById(memComReplyReqDto.getCommentId());
         MemComReply memComReply = MemComReply.builder()
                 .content(memComReplyReqDto.getContent())
-                .writer_id(1L)
+                .writerId(1L)
                 .writer_name("test")
                 .memComment(memComment).build();
         MemComReply createdReply = memComReplyDao.create(memComReply);
