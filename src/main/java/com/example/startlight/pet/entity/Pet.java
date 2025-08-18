@@ -47,11 +47,6 @@ public class Pet {
 
     private String svg_path;
 
-    @Builder.Default
-    private Boolean albumStarted = false;
-
-    private LocalDateTime albumStartedTime;
-
     @ElementCollection
     @CollectionTable(name = "starlist_edges", joinColumns = @JoinColumn(name = "pet_id"))
     private List<Edge> edges = new ArrayList<>();
@@ -72,10 +67,5 @@ public class Pet {
                 .death_date(dto.getDeath_date())
                 .personality(dto.getPersonality())
                 .build();
-    }
-
-    public void updateAlbumStarted() {
-        this.albumStarted = true;
-        this.albumStartedTime = LocalDateTime.now();
     }
 }
