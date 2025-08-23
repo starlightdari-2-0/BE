@@ -58,6 +58,7 @@ jobs:
             
             # 백엔드 컨테이너만 재시작
             echo "🔄 백엔드 컨테이너 재시작"
+            cd /home/ubuntu
             docker-compose up -d --force-recreate --build backend
             
             # 상태 확인 및 로그 출력
