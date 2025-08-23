@@ -1,0 +1,68 @@
+name: starlight BE 배포
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # 작업이 실행될 환경
+    steps:
+      - name: 체크아웃
+        uses: actions/checkout@v3
+
+      - name: application-private.properties 덮어쓰기
+        run: |
+          echo ${{ secrets.PROPERTIES }} | base64 --decode
+          echo ${{ secrets.PROPERTIES }}| base64 --decode > ./src/main/resources/application-private.properties
+          cat ./src/main/resources/application-private.properties
+          touch ./src/main/resources/application-private.properties
+        shell: bash
+      # - name: application-private.properties에 추가설정
+      #   run : |
+      #     echo "" >> ./src/main/resources/application-private.properties
+      #     echo -e "\nkakao.redirect.uri=http://${{ secrets.AWS_API }}:3000/api/auth/kakao/callback" >> ./src/main/resources/application-private.properties
+      #     cat ./src/main/resources/application-private.properties
+      - name: JDK 17 사용
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradle Wrapper 실행 권한 추가
+        run: chmod +x gradlew
+      - name: Gradle로 빌드(CI)
+        run: ./gradlew build
+
+      - name: 도커허브에 로그인
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USER_NAME }}
+          password: ${{ secrets.DOCKER_USER_PW }}
+      - name: 이미지 빌드
+        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
+      - name: 도커허브에 이미지 푸시
+        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+      - name: AWS EC2에 ssh 접속 후 배포
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_IP }}
+          port: 22
+          username: ubuntu
+          key: ${{ secrets.AWS_KEY }}
+          script: |
+            docker stop backend || true
+            docker rm backend || true
+            
+            # 기존 백엔드 이미지 삭제
+            docker rmi ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be || true
+            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+            
+            # 백엔드 컨테이너만 재시작
+            echo "🔄 백엔드 컨테이너 재시작"
+            docker-compose up -d --force-recreate --build backend
+            
+            # 상태 확인 및 로그 출력
+            echo "✅ 상태 확인"
+            docker ps -a
+            docker logs backend

@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
@@ -53,5 +54,13 @@ public class MemCommentDao {
 
     public List<MemComment> findAllByMemoryId(Long memory_id) {
         return memCommentRepository.findAllByMemoryIdDesc(memory_id);
+    }
+
+    public MemComment findById(Long comment_id) {
+        Optional<MemComment> byId = memCommentRepository.findById(comment_id);
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+        else throw new EntityNotFoundException();
     }
 }
