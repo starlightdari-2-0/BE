@@ -14,8 +14,7 @@ jobs:
       - name: application-private.properties 덮어쓰기
         run: |
           echo ${{ secrets.PROPERTIES }}| base64 --decode > ./src/main/resources/application-private.properties
-          cat ./src/main/resources/application-private.properties
-          touch ./src/main/resources/application-private.properties
+          ls -lh ./src/main/resources/application-private.properties
         shell: bash
       # - name: application-private.properties에 추가설정
       #   run : |
@@ -33,15 +32,15 @@ jobs:
       - name: Gradle로 빌드(CI)
         run: ./gradlew build
 
-      - name: 도커허브에 로그인
-        uses: docker/login-action@v1
+      - name: 도커허브 로그인
+        uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKER_USER_NAME }}
           password: ${{ secrets.DOCKER_USER_PW }}
       - name: 이미지 빌드
-        run: sudo docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
+        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
       - name: 도커허브에 이미지 푸시
-        run: sudo docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
       - name: AWS EC2에 ssh 접속 후 배포
         uses: appleboy/ssh-action@master
         with:
@@ -50,12 +49,12 @@ jobs:
           username: ubuntu
           key: ${{ secrets.AWS_KEY }}
           script: |
-            sudo docker stop backend || true
-            sudo docker rm backend || true
+            docker stop backend || true
+            docker rm backend || true
             
             # 기존 백엔드 이미지 삭제
-            sudo docker rmi ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be || true
-            sudo docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+            docker rmi ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be || true
+            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
             
             # 백엔드 컨테이너만 재시작
             echo "🔄 백엔드 컨테이너 재시작"
@@ -63,5 +62,5 @@ jobs:
             
             # 상태 확인 및 로그 출력
             echo "✅ 상태 확인"
-            sudo docker ps -a
-            sudo docker logs backend
+            docker ps -a
+            docker logs backend
