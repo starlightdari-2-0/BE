@@ -39,9 +39,9 @@ jobs:
           username: ${{ secrets.DOCKER_USER_NAME }}
           password: ${{ secrets.DOCKER_USER_PW }}
       - name: 이미지 빌드
-        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
+        run: sudo docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
       - name: 도커허브에 이미지 푸시
-        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+        run: sudo docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
       - name: AWS EC2에 ssh 접속 후 배포
         uses: appleboy/ssh-action@master
         with:
@@ -50,12 +50,12 @@ jobs:
           username: ubuntu
           key: ${{ secrets.AWS_KEY }}
           script: |
-            docker stop backend || true
-            docker rm backend || true
+            sudo docker stop backend || true
+            sudo docker rm backend || true
             
             # 기존 백엔드 이미지 삭제
-            docker rmi ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be || true
-            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
+            sudo docker rmi ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be || true
+            sudo docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
             
             # 백엔드 컨테이너만 재시작
             echo "🔄 백엔드 컨테이너 재시작"
@@ -63,5 +63,5 @@ jobs:
             
             # 상태 확인 및 로그 출력
             echo "✅ 상태 확인"
-            docker ps -a
-            docker logs backend
+            sudo docker ps -a
+            sudo docker logs backend
