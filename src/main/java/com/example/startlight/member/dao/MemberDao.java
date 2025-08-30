@@ -14,4 +14,6 @@ public interface MemberDao {
     void updateMemberMemory(Long id);
 
     Integer getMemoryNum(Long id);
+
+    String getMemberName(Long id);
 }
