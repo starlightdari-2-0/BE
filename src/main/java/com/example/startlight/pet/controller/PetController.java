@@ -53,7 +53,7 @@ public class PetController {
     }
 
     @DeleteMapping("/{petId}")
-    public ResponseEntity<String> deletePet(@PathVariable Long petId) {
+    public ResponseEntity<String> deletePet(@PathVariable Long petId) throws AccessDeniedException {
         petService.deletePet(petId);
         return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted pet with id " + petId);
     }
