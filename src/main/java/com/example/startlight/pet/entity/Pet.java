@@ -29,6 +29,9 @@ public class Pet {
 
     private String pet_img;
 
+    @Column(nullable = false)
+    private AnimalType animal_type;
+
     private String species;
 
     @Column(nullable = false)
@@ -37,15 +40,16 @@ public class Pet {
     @Column(nullable = false)
     private String pet_name;
 
+    @Column(nullable = false)
     private String birth_date;
 
     private String death_date;
 
     private Personality personality;
 
-    private String nickname;
+    private String nickname; // 호칭
 
-    private String svg_path;
+    private String context; // 한줄 기록
 
     @ElementCollection
     @CollectionTable(name = "starlist_edges", joinColumns = @JoinColumn(name = "pet_id"))
@@ -61,11 +65,14 @@ public class Pet {
         return Pet.builder()
                 .member(member.get())
                 .pet_name(dto.getPet_name())
+                .animal_type(dto.getAnimal_type())
                 .species(dto.getSpecies())
                 .gender(dto.getGender())
                 .birth_date(dto.getBirth_date())
                 .death_date(dto.getDeath_date())
                 .personality(dto.getPersonality())
+                .nickname(dto.getNickname())
+                .context(dto.getContext())
                 .build();
     }
 }

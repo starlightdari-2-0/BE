@@ -19,7 +19,6 @@ public class PetMyPageRepDto {
     public static PetMyPageRepDto toPetMyPageRepDto(Pet pet) {
         return PetMyPageRepDto.builder()
                 .pet_id(pet.getPet_id())
-                .pet_svg(pet.getSvg_path())
                 .pet_name(pet.getPet_name()).build();
     }
 }
