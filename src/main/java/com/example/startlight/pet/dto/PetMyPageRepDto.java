@@ -12,9 +12,11 @@ public class PetMyPageRepDto {
 
     private Long pet_id;
 
-    private String pet_svg;
+    private String pet_img;
 
     private String pet_name;
+
+    private Integer star_count;
 
     public static PetMyPageRepDto toPetMyPageRepDto(Pet pet) {
         return PetMyPageRepDto.builder()

@@ -40,6 +40,12 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(petRepDtoList);
     }
 
+    @GetMapping("/{petId}")
+    public ResponseEntity<PetRepDto> getEachPet(@RequestParam Long petId) throws IOException {
+        PetRepDto petRepDto = petService.getPetById(petId);
+        return ResponseEntity.status(HttpStatus.OK).body(petRepDto);
+    }
+
     @GetMapping("/{petId}/stars")
     public ResponseEntity<PetStarListRepDto> getList(@PathVariable Long petId) {
         try {

@@ -60,6 +60,12 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
+    public PetRepDto getPetById(Long petId) throws IOException {
+        Pet selectedPet = petDao.selectPet(petId);
+        return PetRepDto.toDto(selectedPet);
+    }
+
+    @Override
     public List<PetMyPageRepDto> getPets() {
         Long userId = UserUtil.getCurrentUserId();
         List<Pet> pets = petDao.selectAllPet(userId);
