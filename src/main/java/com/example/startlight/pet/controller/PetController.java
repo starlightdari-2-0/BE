@@ -29,7 +29,7 @@ public class PetController {
     }
 
     @PatchMapping("/{petId}")
-    public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetUpdateReqDto petUpdateReqDto) {
+    public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetReqDto petUpdateReqDto) throws IOException {
         PetRepDto responsePetRepDto = petService.updatePet(petId, petUpdateReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(responsePetRepDto);
     }

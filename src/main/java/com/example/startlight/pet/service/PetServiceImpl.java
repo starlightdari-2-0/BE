@@ -41,7 +41,7 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
-    public PetRepDto updatePet(Long petId, PetUpdateReqDto petUpdateReqDto) {
+    public PetRepDto updatePet(Long petId, PetReqDto petUpdateReqDto) throws IOException {
         Pet pet = petDao.updatePet(petId, petUpdateReqDto);
         return PetRepDto.toDto(pet);
     }
