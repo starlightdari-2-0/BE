@@ -41,9 +41,28 @@ public class PetServiceImpl implements PetService{
     }
 
     @Override
-    public PetRepDto updatePet(Long petId, PetUpdateReqDto petUpdateReqDto) {
+    public PetRepDto updatePet(Long petId, PetReqDto petUpdateReqDto) throws IOException {
+        Long userId = UserUtil.getCurrentUserId();
+
+        // ✅ 펫 조회 후 없으면 예외 발생
+        Pet selectedPet = petDao.selectPet(petId);
+        if (selectedPet == null) {
+            throw new NotFoundException("Pet with id " + petId + " not found");
+        }
+
+        // ✅ 권한 확인
+        if (!selectedPet.getMember().getMember_id().equals(userId)) {
+            throw new AccessDeniedException("You do not have permission to access this pet");
+        }
+
         Pet pet = petDao.updatePet(petId, petUpdateReqDto);
         return PetRepDto.toDto(pet);
+    }
+
+    @Override
+    public PetRepDto getPetById(Long petId) throws IOException {
+        Pet selectedPet = petDao.selectPet(petId);
+        return PetRepDto.toDto(selectedPet);
     }
 
     @Override
@@ -82,20 +101,28 @@ public class PetServiceImpl implements PetService{
         List<Edge> edgesByPetId = petDao.getEdgesByPetId(petId);
         List<StarListRepDto> list = starListService.getList(petId);
 
-        // ✅ 응답 객체 생성 및 반환
-        String svgPath = selectedPet.getSvg_path();
         return PetStarListRepDto.builder()
                 .petId(petId)
                 .petName(selectedPet.getPet_name())
-                .svgPath(svgPath)
                 .starList(list)
                 .edges(edgesByPetId)
                 .build();
     }
 
     @Override
-    public void deletePet(Long petId) {
+    public void deletePet(Long petId) throws AccessDeniedException {
+        Long userId = UserUtil.getCurrentUserId();
+
+        Pet selectedPet = petDao.selectPet(petId);
+        if (selectedPet == null) {
+            throw new NotFoundException("Pet with id " + petId + " not found");
+        }
+
+        if (!selectedPet.getMember().getMember_id().equals(userId)) {
+            throw new AccessDeniedException("You do not have permission to access this pet");
+        }
         petDao.deletePet(petId);
+        s3Service.deletePetImg(petId);
     }
 
 

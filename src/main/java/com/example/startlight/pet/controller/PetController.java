@@ -29,7 +29,7 @@ public class PetController {
     }
 
     @PatchMapping("/{petId}")
-    public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetUpdateReqDto petUpdateReqDto) {
+    public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetReqDto petUpdateReqDto) throws IOException {
         PetRepDto responsePetRepDto = petService.updatePet(petId, petUpdateReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(responsePetRepDto);
     }
@@ -38,6 +38,12 @@ public class PetController {
     public ResponseEntity<List<PetMyPageRepDto>> getAllPets() {
         List<PetMyPageRepDto> petRepDtoList = petService.getPets();
         return ResponseEntity.status(HttpStatus.OK).body(petRepDtoList);
+    }
+
+    @GetMapping("/{petId}")
+    public ResponseEntity<PetRepDto> getEachPet(@RequestParam Long petId) throws IOException {
+        PetRepDto petRepDto = petService.getPetById(petId);
+        return ResponseEntity.status(HttpStatus.OK).body(petRepDto);
     }
 
     @GetMapping("/{petId}/stars")
@@ -53,7 +59,7 @@ public class PetController {
     }
 
     @DeleteMapping("/{petId}")
-    public ResponseEntity<String> deletePet(@PathVariable Long petId) {
+    public ResponseEntity<String> deletePet(@PathVariable Long petId) throws AccessDeniedException {
         petService.deletePet(petId);
         return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted pet with id " + petId);
     }
