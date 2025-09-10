@@ -16,7 +16,5 @@ public interface PetDao {
 
     Pet updatePet(Long petId, PetReqDto petUpdateReqDto) throws IOException;
 
-    List<Edge> getEdgesByPetId(Long petId);
-
     void deletePet(Long petId);
 }

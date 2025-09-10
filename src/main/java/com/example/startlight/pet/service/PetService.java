@@ -13,6 +13,6 @@ public interface PetService {
     PetRepDto getPetById(Long petId) throws IOException;
     List<PetMyPageRepDto> getPets();
     List<PetSimpleRepDto> getPetSimple(Long userId);
-    PetStarListRepDto getPetStarList(Long petId) throws AccessDeniedException;
+    //PetStarListRepDto getPetStarList(Long petId) throws AccessDeniedException;
     void deletePet(Long petId) throws AccessDeniedException;
 }

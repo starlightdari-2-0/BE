@@ -45,7 +45,7 @@ public class PetDaoImpl implements PetDao{
         Optional<Pet> selectedPet = petRepository.findById(petId);
         if(selectedPet.isPresent()) {
             Pet pet = selectedPet.get();
-            Optional.ofNullable(petUpdateReqDto.getAnimal_type()).ifPresent(pet::setAnimal_type);
+            //Optional.ofNullable(petUpdateReqDto.getAnimal_type()).ifPresent(pet::setAnimal_type);
             Optional.ofNullable(petUpdateReqDto.getPet_name()).ifPresent(pet::setPet_name);
             Optional.ofNullable(petUpdateReqDto.getSpecies()).ifPresent(pet::setSpecies);
             Optional.ofNullable(petUpdateReqDto.getGender()).ifPresent(pet::setGender);
@@ -61,11 +61,6 @@ public class PetDaoImpl implements PetDao{
             return pet;
         }
         throw new NoSuchElementException("Member not found with id: " + petId);
-    }
-
-    @Override
-    public List<Edge> getEdgesByPetId(Long petId) {
-        return petRepository.findEdgesByPetId(petId);
     }
 
     @Override
