@@ -52,10 +52,10 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public MemberNickNameRepDto updateMemberName(String nickname) {
+    public String updateMemberName(String nickname) {
         Long userId = UserUtil.getCurrentUserId();
         Member member = memberDao.updateMemberName(userId,nickname);
-        return MemberNickNameRepDto.builder().nickname(member.getSt_nickname()).build();
+        return member.getSt_nickname();
     }
 
     @Override
@@ -86,6 +86,7 @@ public class MemberServiceImpl implements MemberService{
     public Long getLoginedUserId() {
         return UserUtil.getCurrentUserId();
     }
+
 
     @Override
     public void updateMemberMemory() {

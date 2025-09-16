@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/member")
@@ -31,11 +33,11 @@ public class MemberController {
     }
 
     @PutMapping("/name")
-    public ResponseEntity<MemberNickNameRepDto> updateUserName(
+    public ResponseEntity<Map<String, String>> updateUserName(
             @RequestBody MemberRequestDto memberRequestDto
             ) {
-        MemberDto memberDto = memberService.updateMemberName(memberRequestDto.getNickname());
-        return ResponseEntity.status(HttpStatus.OK).body(memberDto);
+        String updatedMemberName = memberService.updateMemberName(memberRequestDto.getNickname());
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("nickname", updatedMemberName));
     }
 
     @DeleteMapping("/delete")
@@ -58,5 +60,11 @@ public class MemberController {
     public ResponseEntity<Long> getLoginedUserId() {
         Long loginedUserId = memberService.getLoginedUserId();
         return ResponseEntity.status(HttpStatus.OK).body(loginedUserId);
+    }
+
+    @GetMapping("/email")
+    public ResponseEntity<Map<String, String>> getEmail() {
+        String email = memberService.selectCurrentMember().getEmail();
+        return ResponseEntity.status(HttpStatus.OK).body(Map.of("email", email));
     }
 }

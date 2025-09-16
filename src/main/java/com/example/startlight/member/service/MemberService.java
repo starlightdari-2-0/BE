@@ -10,7 +10,7 @@ public interface MemberService {
 
     MemberDto selectCurrentMember();
 
-    MemberNickNameRepDto updateMemberName(String nickname);
+    String updateMemberName(String nickname);
 
     void deleteMember(Long id);
 
