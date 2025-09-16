@@ -1,6 +1,7 @@
 package com.example.startlight.member.controller;
 
 import com.example.startlight.member.dto.MemberDto;
+import com.example.startlight.member.dto.MemberNickNameRepDto;
 import com.example.startlight.member.dto.MemberRequestDto;
 import com.example.startlight.member.dto.MemberWithPetDto;
 import com.example.startlight.member.service.MemberService;
@@ -30,7 +31,7 @@ public class MemberController {
     }
 
     @PutMapping("/name")
-    public ResponseEntity<MemberDto> updateUserName(
+    public ResponseEntity<MemberNickNameRepDto> updateUserName(
             @RequestBody MemberRequestDto memberRequestDto
             ) {
         MemberDto memberDto = memberService.updateMemberName(memberRequestDto.getNickname());

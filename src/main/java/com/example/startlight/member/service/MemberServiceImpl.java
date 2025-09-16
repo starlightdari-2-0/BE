@@ -4,6 +4,7 @@ import com.example.startlight.kakao.dto.KakaoUserCreateDto;
 import com.example.startlight.kakao.util.UserUtil;
 import com.example.startlight.member.dao.MemberDao;
 import com.example.startlight.member.dto.MemberDto;
+import com.example.startlight.member.dto.MemberNickNameRepDto;
 import com.example.startlight.member.dto.MemberWithPetDto;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.member.repository.MemberRepository;
@@ -51,10 +52,10 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public MemberDto updateMemberName(String nickname) {
+    public MemberNickNameRepDto updateMemberName(String nickname) {
         Long userId = UserUtil.getCurrentUserId();
         Member member = memberDao.updateMemberName(userId,nickname);
-        return MemberDto.toDto(member);
+        return MemberNickNameRepDto.builder().nickname(member.getSt_nickname()).build();
     }
 
     @Override
