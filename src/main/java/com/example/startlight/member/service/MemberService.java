@@ -2,6 +2,7 @@ package com.example.startlight.member.service;
 
 import com.example.startlight.kakao.dto.KakaoUserCreateDto;
 import com.example.startlight.member.dto.MemberDto;
+import com.example.startlight.member.dto.MemberNickNameRepDto;
 import com.example.startlight.member.dto.MemberWithPetDto;
 
 public interface MemberService {
@@ -9,7 +10,7 @@ public interface MemberService {
 
     MemberDto selectCurrentMember();
 
-    MemberDto updateMemberName(String nickname);
+    String updateMemberName(String nickname);
 
     void deleteMember(Long id);
 

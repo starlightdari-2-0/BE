@@ -1,6 +1,6 @@
 package com.example.startlight.pet.dto;
 
-import com.example.startlight.pet.entity.AnimalType;
+import com.example.startlight.constellation.entity.AnimalCategory;
 import com.example.startlight.pet.entity.Gender;
 import com.example.startlight.pet.entity.Personality;
 import com.example.startlight.pet.entity.Pet;
@@ -19,7 +19,7 @@ public class PetRepDto {
 
     private String pet_img;
 
-    private AnimalType animalType;
+    private AnimalCategory animal_category;
 
     private String species;
 
@@ -43,7 +43,7 @@ public class PetRepDto {
                 .pet_id(pet.getPet_id())
                 .pet_img(pet.getPet_img())
                 .pet_name(pet.getPet_name())
-                .animalType(pet.getAnimal_type())
+                .animal_category(pet.getAnimal_category())
                 .species(pet.getSpecies())
                 .gender(pet.getGender())
                 .birth_date(pet.getBirth_date())

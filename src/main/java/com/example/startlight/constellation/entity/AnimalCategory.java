@@ -1,6 +1,6 @@
-package com.example.startlight.pet.entity;
+package com.example.startlight.constellation.entity;
 
-public enum AnimalType {
+public enum AnimalCategory {
     DOG("강아지"),
     CAT("고양이"),
     FISH("어류"),
@@ -11,7 +11,7 @@ public enum AnimalType {
 
     private final String korean;
 
-    AnimalType(String korean) {
+    AnimalCategory(String korean) {
         this.korean = korean;
     }
 

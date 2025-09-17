@@ -1,6 +1,6 @@
 package com.example.startlight.pet.dto;
 
-import com.example.startlight.pet.entity.AnimalType;
+import com.example.startlight.constellation.entity.AnimalCategory;
 import com.example.startlight.pet.entity.Gender;
 import com.example.startlight.pet.entity.Personality;
 import lombok.*;
@@ -15,7 +15,7 @@ public class PetReqDto {
 
     private MultipartFile pet_img;
 
-    private AnimalType animal_type;
+    private Long animal_type_id;
 
     private String species;
 
