@@ -50,6 +50,9 @@ public class Pet {
     @Column(nullable = false)
     private String birth_date;
 
+    @Column(nullable = false)
+    private String first_date;
+
     private String death_date;
 
     private Personality personality;
@@ -69,6 +72,7 @@ public class Pet {
                 .species(dto.getSpecies())
                 .gender(dto.getGender())
                 .birth_date(dto.getBirth_date())
+                .first_date(dto.getFirst_date())
                 .death_date(dto.getDeath_date())
                 .personality(dto.getPersonality())
                 .nickname(dto.getNickname())

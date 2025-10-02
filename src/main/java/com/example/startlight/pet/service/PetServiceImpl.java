@@ -36,8 +36,7 @@ public class PetServiceImpl implements PetService{
     @Override
     @Transactional
     public PetIdRepDto createPet(PetReqDto petReqDto) throws IOException {
-        //Long userId = UserUtil.getCurrentUserId();
-        Long userId = 3879188713l;
+        Long userId = UserUtil.getCurrentUserId();
         Member member = memberRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Member not found: " + userId));
 
@@ -55,13 +54,11 @@ public class PetServiceImpl implements PetService{
     public PetRepDto updatePet(Long petId, PetReqDto petUpdateReqDto) throws IOException {
         Long userId = UserUtil.getCurrentUserId();
 
-        // ✅ 펫 조회 후 없으면 예외 발생
         Pet selectedPet = petDao.selectPet(petId);
         if (selectedPet == null) {
             throw new NotFoundException("Pet with id " + petId + " not found");
         }
 
-        // ✅ 권한 확인
         if (!selectedPet.getMember().getMember_id().equals(userId)) {
             throw new AccessDeniedException("You do not have permission to access this pet");
         }
