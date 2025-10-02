@@ -25,6 +25,8 @@ public class PetReqDto {
 
     private String birth_date;
 
+    private String first_date;
+
     private String death_date;
 
     private Personality personality;

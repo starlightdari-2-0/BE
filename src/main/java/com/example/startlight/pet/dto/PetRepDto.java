@@ -29,6 +29,8 @@ public class PetRepDto {
 
     private String birth_date;
 
+    private String first_date;
+
     private String death_date;
 
     private Personality personality;
@@ -47,6 +49,7 @@ public class PetRepDto {
                 .species(pet.getSpecies())
                 .gender(pet.getGender())
                 .birth_date(pet.getBirth_date())
+                .first_date(pet.getFirst_date())
                 .death_date(pet.getDeath_date())
                 .personality(pet.getPersonality())
                 .nickname(pet.getNickname())
