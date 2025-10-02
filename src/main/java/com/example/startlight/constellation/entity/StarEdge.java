@@ -1,9 +1,13 @@
 package com.example.startlight.constellation.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "star_edge")
+@AllArgsConstructor
+@NoArgsConstructor
 public class StarEdge {
     @Id
     private Long edge_id;
