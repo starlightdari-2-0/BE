@@ -48,10 +48,10 @@ public class ConstellationService {
                 MajorPointsJson.class
         );
 
-        List<StarNodeRequestDto> nodeList = new ArrayList<>();
+        List<StarNodeDto> nodeList = new ArrayList<>();
         for (int i = 0; i < majorPointsJson.getMajorPoints().size(); i++) {
             List<Integer> point = majorPointsJson.getMajorPoints().get(i);
-            StarNodeRequestDto dto = new StarNodeRequestDto(
+            StarNodeDto dto = new StarNodeDto(
                     (long) (i + 1),  // node_id는 1부터 시작
                     conId,
                     point.get(0),    // x 좌표
@@ -68,10 +68,10 @@ public class ConstellationService {
                 EdgesJson.class
         );
 
-        List<StarEdgeRequestDto> edgeList = new ArrayList<>();
+        List<StarEdgeDto> edgeList = new ArrayList<>();
         for (int i = 0; i < edgesJson.getEdges().size(); i++) {
             List<Integer> edge = edgesJson.getEdges().get(i);
-            StarEdgeRequestDto dto = new StarEdgeRequestDto(
+            StarEdgeDto dto = new StarEdgeDto(
                     (long) (i + 1),          // edge_id는 1부터 시작
                     conId,
                     edge.get(0).longValue() + 1,  // start_node_id (인덱스 0부터 시작하므로 +1)
@@ -86,7 +86,7 @@ public class ConstellationService {
     /**
      * Node 리스트를 DB에 저장
      */
-    public void saveNodes(List<StarNodeRequestDto> nodeList) {
+    public void saveNodes(List<StarNodeDto> nodeList) {
         Optional<Constellation> byId = constellationRepository.findById(nodeList.get(0).getCon_id());
         if (byId.isPresent()) {
             Constellation constellation = byId.get();
@@ -107,7 +107,7 @@ public class ConstellationService {
     /**
      * Edge 리스트를 DB에 저장
      */
-    public void saveEdges(List<StarEdgeRequestDto> edgeList) {
+    public void saveEdges(List<StarEdgeDto> edgeList) {
         Optional<Constellation> byId = constellationRepository.findById(edgeList.get(0).getCon_id());
         if (byId.isPresent()) {
             Constellation constellation = byId.get();
@@ -123,5 +123,35 @@ public class ConstellationService {
             starEdgeRepository.saveAll(entities);
         }
 
+    }
+
+    public ConstellationWithStarRepDto getConstellationById(Long conId) {
+        Optional<Constellation> optionalConstellation = constellationRepository.findById(conId);
+        if (optionalConstellation.isPresent()) {
+            Constellation constellation = optionalConstellation.get();
+            List<StarEdge> starEdgeList = starEdgeRepository.findByConstellationId(conId);
+            List<StarNode> starNodeList = starNodeRepository.findByConstellationId(conId);
+
+            List<StarEdgeRepDto> starEdgeDtoList = starEdgeList.stream()
+                    .map(starEdge -> StarEdgeRepDto.builder()
+                            .starPoint(starEdge.getStart_node_id())
+                            .endPoint(starEdge.getEnd_node_id())
+                            .build())
+                    .toList();
+
+            List<StarNodeRepDto> starNodeDtoList = starNodeList.stream()
+                    .map(starNode -> StarNodeRepDto.builder()
+                            .node_id(starNode.getNode_id())
+                            .x_star(starNode.getX_star())
+                            .y_star(starNode.getY_star())
+                            .build()).toList();
+            return ConstellationWithStarRepDto.builder()
+                    .con_id(conId)
+                    .thumbnail_img(constellation.getThumbnail_img())
+                    .star_nodes(starNodeDtoList)
+                    .star_edges(starEdgeDtoList)
+                    .build();
+        }
+        return null;
     }
 }

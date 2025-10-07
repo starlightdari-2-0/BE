@@ -90,6 +90,12 @@ public class PetServiceImpl implements PetService{
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public void getPetStars(Long petId) {
+        Pet selectedPet = petDao.selectPet(petId);
+        Long conId = selectedPet.getCon_id();
+    }
+
 //    @Override
 //    public PetStarListRepDto getPetStarList(Long petId) throws AccessDeniedException {
 //        Long userId = UserUtil.getCurrentUserId();

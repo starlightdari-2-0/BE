@@ -58,6 +58,8 @@ public class PetController {
 //        }
 //    }
 
+    @GetMapping("/{petId}/stars")
+
     @DeleteMapping("/{petId}")
     public ResponseEntity<String> deletePet(@PathVariable Long petId) throws AccessDeniedException {
         petService.deletePet(petId);

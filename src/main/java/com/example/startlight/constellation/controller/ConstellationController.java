@@ -1,6 +1,7 @@
 package com.example.startlight.constellation.controller;
 
 import com.example.startlight.constellation.dto.ConstellationResponseDto;
+import com.example.startlight.constellation.dto.ConstellationWithStarRepDto;
 import com.example.startlight.constellation.entity.Constellation;
 import com.example.startlight.constellation.service.ConstellationService;
 import lombok.RequiredArgsConstructor;
@@ -105,6 +106,12 @@ public class ConstellationController {
             response.put("message", "저장 중 오류 발생: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
+    }
+
+    @GetMapping("/each/{conId}")
+    public ResponseEntity<ConstellationWithStarRepDto> getConStellationWithStar(@PathVariable Long conId) {
+        ConstellationWithStarRepDto constellationWithStar = constellationService.getConstellationById(conId);
+        return ResponseEntity.ok(constellationWithStar);
     }
 
         /**

@@ -1,13 +1,12 @@
 package com.example.startlight.constellation.dto;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
-public class StarNodeRequestDto {
+@Builder
+public class StarNodeRepDto {
     private Long node_id;
-    private Long con_id;
     private Integer x_star;
     private Integer y_star;
 }
