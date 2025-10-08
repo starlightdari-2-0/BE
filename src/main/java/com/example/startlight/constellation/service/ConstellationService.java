@@ -78,12 +78,11 @@ public class ConstellationService {
         List<StarEdgeDto> edgeList = new ArrayList<>();
         for (int i = 0; i < edgesJson.getEdges().size(); i++) {
             List<Integer> edge = edgesJson.getEdges().get(i);
-            StarEdgeDto dto = new StarEdgeDto(
-                    (long) (i + 1),          // edge_id는 1부터 시작
-                    conId,
-                    edge.get(0).longValue() + 1,  // start_node_id (인덱스 0부터 시작하므로 +1)
-                    edge.get(1).longValue() + 1   // end_node_id (인덱스 0부터 시작하므로 +1)
-            );
+            StarEdgeDto dto = StarEdgeDto.builder()
+                    .con_id(conId)
+                    .start_node_id(edge.get(0).longValue() + 1)
+                    .end_node_id(edge.get(1).longValue() - 1)
+                            .build();
             edgeList.add(dto);
         }
 
@@ -119,12 +118,11 @@ public class ConstellationService {
         if (byId.isPresent()) {
             Constellation constellation = byId.get();
             List<StarEdge> entities = edgeList.stream()
-                    .map(dto -> new StarEdge(
-                            dto.getEdge_id(),
-                            constellation,
-                            dto.getStart_node_id(),
-                            dto.getEnd_node_id()
-                    ))
+                    .map(dto -> StarEdge.builder()
+                            .constellation(constellation)
+                            .start_node_id(dto.getStart_node_id())
+                            .end_node_id(dto.getEnd_node_id())
+                            .build())
                     .collect(Collectors.toList());
 
             starEdgeRepository.saveAll(entities);
