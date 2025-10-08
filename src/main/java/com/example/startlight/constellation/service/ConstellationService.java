@@ -7,6 +7,11 @@ import com.example.startlight.constellation.entity.StarNode;
 import com.example.startlight.constellation.repository.ConstellationRepository;
 import com.example.startlight.constellation.repository.StarEdgeRepository;
 import com.example.startlight.constellation.repository.StarNodeRepository;
+import com.example.startlight.pet.dto.PetRepDto;
+import com.example.startlight.pet.dto.PetStarRepDto;
+import com.example.startlight.pet.dto.StarNodeWithMemoryDto;
+import com.example.startlight.pet.service.PetService;
+import com.example.startlight.starInfo.repository.StarInfoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,6 +30,8 @@ public class ConstellationService {
     private final ConstellationRepository constellationRepository;
     private final StarNodeRepository starNodeRepository;
     private final StarEdgeRepository starEdgeRepository;
+    private final StarInfoRepository starInfoRepository;
+    private final PetService petService;
     private final ObjectMapper objectMapper;
 
     public List<ConstellationResponseDto> getConstellationByAnimalType(Long animalTypeId) {
@@ -148,9 +155,48 @@ public class ConstellationService {
             return ConstellationWithStarRepDto.builder()
                     .con_id(conId)
                     .thumbnail_img(constellation.getThumbnail_img())
-                    .star_nodes(starNodeDtoList)
-                    .star_edges(starEdgeDtoList)
+                    .nodes(starNodeDtoList)
+                    .edges(starEdgeDtoList)
                     .build();
+        }
+        return null;
+    }
+
+    public PetStarRepDto getConstellationWithStarByPetId(Long petId) {
+        Long conId = petService.getPetConId(petId);
+        Optional<Constellation> optionalConstellation = constellationRepository.findById(conId);
+        if (optionalConstellation.isPresent()) {
+            String petName = petService.getPetName(petId);
+            Constellation constellation = optionalConstellation.get();
+            List<StarEdge> starEdgeList = starEdgeRepository.findByConstellationId(conId);
+            List<StarNode> starNodeList = starNodeRepository.findByConstellationId(conId);
+
+            List<StarEdgeRepDto> starEdgeDtoList = starEdgeList.stream()
+                    .map(starEdge -> StarEdgeRepDto.builder()
+                            .starPoint(starEdge.getStart_node_id())
+                            .endPoint(starEdge.getEnd_node_id())
+                            .build())
+                    .toList();
+
+            List<StarNodeWithMemoryDto> starNodeDtoList = starNodeList.stream()
+                    .map(starNode -> StarNodeWithMemoryDto.builder()
+                            .node_id(starNode.getNode_id())
+                            .x_star(starNode.getX_star())
+                            .y_star(starNode.getY_star())
+                            .build()).toList();
+            for (StarNodeWithMemoryDto starNodeWithMemoryDto : starNodeDtoList) {
+                Long memoryId = starInfoRepository.findMemoryId(conId, starNodeWithMemoryDto.getNode_id());
+                if (memoryId != null) {
+                    starNodeWithMemoryDto.setMemoryWritten(memoryId);
+                }
+            }
+
+            return PetStarRepDto.builder()
+                    .petId(petId)
+                    .petName(petName)
+                    .thumbnail_img(constellation.getThumbnail_img())
+                    .nodes(starNodeDtoList)
+                    .edges(starEdgeDtoList).build();
         }
         return null;
     }

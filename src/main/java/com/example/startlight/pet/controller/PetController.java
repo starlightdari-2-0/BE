@@ -46,20 +46,6 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(petRepDto);
     }
 
-//    @GetMapping("/{petId}/stars")
-//    public ResponseEntity<PetStarListRepDto> getList(@PathVariable Long petId) {
-//        try {
-//            PetStarListRepDto petStarList = petService.getPetStarList(petId);
-//            return ResponseEntity.status(HttpStatus.OK).body(petStarList);
-//        } catch (AccessDeniedException e) {
-//            // ✅ 접근 권한 없을 경우 403 반환
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-//                    .body(null);
-//        }
-//    }
-
-    @GetMapping("/{petId}/stars")
-
     @DeleteMapping("/{petId}")
     public ResponseEntity<String> deletePet(@PathVariable Long petId) throws AccessDeniedException {
         petService.deletePet(petId);

@@ -1,6 +1,5 @@
 package com.example.startlight.constellation.dto;
 
-import com.example.startlight.constellation.entity.StarNode;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

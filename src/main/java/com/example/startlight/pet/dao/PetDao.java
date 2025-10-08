@@ -17,4 +17,6 @@ public interface PetDao {
     Pet updatePet(Long petId, PetReqDto petUpdateReqDto) throws IOException;
 
     void deletePet(Long petId);
+
+    Long getPetConId(Long petId);
 }
