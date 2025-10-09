@@ -2,20 +2,22 @@ package com.example.startlight.constellation.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "star_node")
-@IdClass(StarNodeId.class)
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Builder
 public class StarNode {
     @Id
-    private Long con_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long star_node_id;
 
-    @Id
+    @Column(nullable = false)
     private Long node_id;
 
     @ManyToOne(fetch = FetchType.LAZY)

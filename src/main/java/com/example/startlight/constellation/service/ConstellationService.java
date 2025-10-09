@@ -7,10 +7,11 @@ import com.example.startlight.constellation.entity.StarNode;
 import com.example.startlight.constellation.repository.ConstellationRepository;
 import com.example.startlight.constellation.repository.StarEdgeRepository;
 import com.example.startlight.constellation.repository.StarNodeRepository;
+import com.example.startlight.memoryStar.entity.MemoryStar;
+import com.example.startlight.memoryStar.repository.MemoryStarRepository;
 import com.example.startlight.pet.dto.PetStarRepDto;
-import com.example.startlight.pet.dto.StarNodeWithMemoryDto;
+import com.example.startlight.constellation.dto.StarNodeWithMemoryDto;
 import com.example.startlight.pet.service.PetService;
-import com.example.startlight.starInfo.repository.StarInfoRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +30,7 @@ public class ConstellationService {
     private final ConstellationRepository constellationRepository;
     private final StarNodeRepository starNodeRepository;
     private final StarEdgeRepository starEdgeRepository;
-    private final StarInfoRepository starInfoRepository;
+    private final MemoryStarRepository memoryStarRepository;
     private final PetService petService;
     private final ObjectMapper objectMapper;
 
@@ -57,12 +58,12 @@ public class ConstellationService {
         List<StarNodeDto> nodeList = new ArrayList<>();
         for (int i = 0; i < majorPointsJson.getMajorPoints().size(); i++) {
             List<Integer> point = majorPointsJson.getMajorPoints().get(i);
-            StarNodeDto dto = new StarNodeDto(
-                    (long) (i + 1),  // node_id는 1부터 시작
-                    conId,
-                    point.get(0),    // x 좌표
-                    point.get(1)     // y 좌표
-            );
+            StarNodeDto dto = StarNodeDto.builder()
+                    .node_id((long) (i + 1))
+                    .con_id(conId)
+                    .x_star(point.get(0))
+                    .y_star(point.get(1))
+                    .build();
             nodeList.add(dto);
         }
 
@@ -96,13 +97,12 @@ public class ConstellationService {
         if (byId.isPresent()) {
             Constellation constellation = byId.get();
             List<StarNode> entities = nodeList.stream()
-                    .map(dto -> new StarNode(
-                            dto.getCon_id(),
-                            dto.getNode_id(),
-                            constellation,
-                            dto.getX_star(),
-                            dto.getY_star()
-                    ))
+                    .map(dto -> StarNode.builder()
+                            .node_id(dto.getNode_id())
+                            .constellation(constellation)
+                            .x_star(dto.getX_star())
+                            .y_star(dto.getY_star())
+                                    .build())
                     .collect(Collectors.toList());
 
             starNodeRepository.saveAll(entities);
@@ -145,6 +145,7 @@ public class ConstellationService {
 
             List<StarNodeRepDto> starNodeDtoList = starNodeList.stream()
                     .map(starNode -> StarNodeRepDto.builder()
+                            .star_node_id(starNode.getStar_node_id())
                             .node_id(starNode.getNode_id())
                             .x_star(starNode.getX_star())
                             .y_star(starNode.getY_star())
@@ -177,12 +178,13 @@ public class ConstellationService {
 
             List<StarNodeWithMemoryDto> starNodeDtoList = starNodeList.stream()
                     .map(starNode -> StarNodeWithMemoryDto.builder()
+                            .star_node_id(starNode.getStar_node_id())
                             .node_id(starNode.getNode_id())
                             .x_star(starNode.getX_star())
                             .y_star(starNode.getY_star())
                             .build()).toList();
             for (StarNodeWithMemoryDto starNodeWithMemoryDto : starNodeDtoList) {
-                Long memoryId = starInfoRepository.findMemoryId(conId, starNodeWithMemoryDto.getNode_id());
+                Long memoryId = memoryStarRepository.findByPetIdAndStarNodeId(petId, starNodeWithMemoryDto.getStar_node_id());
                 if (memoryId != null) {
                     starNodeWithMemoryDto.setMemoryWritten(memoryId);
                 }

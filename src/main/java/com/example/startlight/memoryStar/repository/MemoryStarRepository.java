@@ -21,4 +21,7 @@ public interface MemoryStarRepository extends JpaRepository<MemoryStar, Long> {
 
     @Query("SELECT m FROM MemoryStar m WHERE m.usedToGenerate = false AND m.pet_id = :petId ORDER BY m.updatedAt ASC")
     List<MemoryStar> findMemoryStarByPetIdUnused(@Param("petId") Long petId, Pageable pageable);
+
+    @Query("SELECT m.memory_id FROM MemoryStar m WHERE m.pet_id = :petId AND m.star_node_id = :starNodeId ")
+    Long findByPetIdAndStarNodeId(@Param("petId") Long petId, @Param("starNodeId") Long starNodeId);
 }
