@@ -30,11 +30,6 @@ public class MemoryStar {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memory_id;
 
-    @OneToOne
-    @JoinColumn(name = "star_id", nullable = true) // ✅ NULL 허용
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    private StarList starList;
-
     @Column(nullable = false)
     private Long writer_id;
 

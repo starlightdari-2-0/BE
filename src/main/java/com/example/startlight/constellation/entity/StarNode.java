@@ -2,6 +2,7 @@ package com.example.startlight.constellation.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @IdClass(StarNodeId.class)
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class StarNode {
     @Id
     private Long con_id;

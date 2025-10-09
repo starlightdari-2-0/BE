@@ -68,4 +68,10 @@ public class PetDaoImpl implements PetDao{
         Pet selectedPet = selectPet(petId);
         petRepository.delete(selectedPet);
     }
+
+    @Override
+    public Long getPetConId(Long petId) {
+        Pet selectedPet = selectPet(petId);
+        return selectedPet.getCon_id();
+    }
 }

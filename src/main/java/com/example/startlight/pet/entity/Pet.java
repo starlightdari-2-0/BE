@@ -61,6 +61,8 @@ public class Pet {
 
     private String context; // 한줄 기록
 
+    private Long con_id; // 선택한 별자리 id
+
     public static Pet toEntity(PetReqDto dto, Member member, AnimalType animalType) {
 
         // Pet 엔티티 생성
