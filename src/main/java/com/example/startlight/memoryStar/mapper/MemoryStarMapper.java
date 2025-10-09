@@ -15,11 +15,9 @@ import java.util.List;
 public interface MemoryStarMapper {
     MemoryStarMapper INSTANCE = Mappers.getMapper(MemoryStarMapper.class);
 
-    @Mapping(source = "starList", target = "starList")
     @Mapping(target = "img_url", ignore = true)
-    MemoryStar toEntity(MemoryStarReqDto dto, StarList starList);
-
-    @Mapping(source = "starList.star_id", target = "star_id")
+    MemoryStar toEntity(MemoryStarReqDto dto);
+    
     MemoryStarRepDto toDto(MemoryStar memoryStar);
 
     MemoryStarSimpleRepDto toSimpleRepDto(MemoryStar memoryStar);

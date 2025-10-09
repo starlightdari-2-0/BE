@@ -1,5 +1,6 @@
 package com.example.startlight.pet.dto;
 
+import com.example.startlight.constellation.entity.AnimalCategory;
 import com.example.startlight.pet.entity.Gender;
 import com.example.startlight.pet.entity.Personality;
 import lombok.*;
@@ -14,13 +15,17 @@ public class PetReqDto {
 
     private MultipartFile pet_img;
 
-    private String pet_name;
+    private Long animal_type_id;
 
     private String species;
 
     private Gender gender;
 
+    private String pet_name;
+
     private String birth_date;
+
+    private String first_date;
 
     private String death_date;
 
@@ -28,7 +33,5 @@ public class PetReqDto {
 
     private String nickname;
 
-    private Double selected_x;
-
-    private Double selected_y;
+    private String context;
 }

@@ -29,7 +29,7 @@ public class PetController {
     }
 
     @PatchMapping("/{petId}")
-    public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetUpdateReqDto petUpdateReqDto) {
+    public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetReqDto petUpdateReqDto) throws IOException {
         PetRepDto responsePetRepDto = petService.updatePet(petId, petUpdateReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(responsePetRepDto);
     }
@@ -40,20 +40,14 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(petRepDtoList);
     }
 
-    @GetMapping("/{petId}/stars")
-    public ResponseEntity<PetStarListRepDto> getList(@PathVariable Long petId) {
-        try {
-            PetStarListRepDto petStarList = petService.getPetStarList(petId);
-            return ResponseEntity.status(HttpStatus.OK).body(petStarList);
-        } catch (AccessDeniedException e) {
-            // ✅ 접근 권한 없을 경우 403 반환
-            return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                    .body(null);
-        }
+    @GetMapping("/{petId}")
+    public ResponseEntity<PetRepDto> getEachPet(@PathVariable Long petId) throws IOException {
+        PetRepDto petRepDto = petService.getPetById(petId);
+        return ResponseEntity.status(HttpStatus.OK).body(petRepDto);
     }
 
     @DeleteMapping("/{petId}")
-    public ResponseEntity<String> deletePet(@PathVariable Long petId) {
+    public ResponseEntity<String> deletePet(@PathVariable Long petId) throws AccessDeniedException {
         petService.deletePet(petId);
         return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted pet with id " + petId);
     }

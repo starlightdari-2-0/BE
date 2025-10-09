@@ -49,6 +49,7 @@ public class KakaoOauthController {
             // 3. JWT 생성
             boolean rememberMe = false; // 예: 클라이언트 요청에 따라 결정
             String jwtToken = jwtTokenProvider.createToken(userInfo, accessToken, rememberMe);
+            System.out.println(jwtToken);
 
             // 5. 인증 객체 확인 (로그 추가)
             Authentication authentication = jwtTokenProvider.verifyAndGetAuthentication(jwtToken);

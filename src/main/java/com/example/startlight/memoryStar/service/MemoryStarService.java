@@ -71,7 +71,7 @@ public class MemoryStarService {
         Member member = memberDao.selectMember(userId);
         memoryStarReqDto.setWriter_id(userId);
         memoryStarReqDto.setWriter_name(member.getSt_nickname());
-        MemoryStar memoryStar = mapper.toEntity(memoryStarReqDto, starListById);
+        MemoryStar memoryStar = mapper.toEntity(memoryStarReqDto);
         MemoryStar createdStar = memoryStarDao.createMemoryStar(memoryStar);
         String memoryImgUrls = s3Service.uploadMemoryImg(memoryStarReqDto.getImg_url(), createdStar.getMemory_id());
         createdStar.setImg_url(memoryImgUrls);
@@ -105,12 +105,8 @@ public class MemoryStarService {
     public void deleteMemoryStar(Long memoryId) {
         Long userId = UserUtil.getCurrentUserId();
         MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(memoryId);
-        Long starId = memoryStar.getStarList().getStar_id();
         memoryStarDao.deleteMemoryStarById(userId, memoryStar);
         s3Service.deleteMemoryImg(memoryId);
-
-        //star에서 unwritten 처리
-        starListDao.setStarUnWritten(starId);
     }
 
     public List<MemoryStarSimpleRepDto> findAllPublicMemoryStar() {

@@ -39,9 +39,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers( "/api/auth/kakao/callback/**").permitAll()
                         .requestMatchers("star/**","memory-stars/{memoryId}/comments","memory-stars/public",
-                                "star/getList","uploads", "post/**", "post/get", "funeral/**","chat/**", "memory-album/**").permitAll() //토큰 인증이 필요하지 않은경우 설정 -- 인증이 필요한 경로가 모두에게 허용되면 익명사용자 설정이 될 수 있
+                                "star/getList","uploads", "post/**", "post/get", "funeral/**","chat/**", "memory-album/**",
+                                "/pets/**", "/constellation/**", "/constellation/each/**").permitAll() //토큰 인증이 필요하지 않은경우 설정 -- 인증이 필요한 경로가 모두에게 허용되면 익명사용자 설정이 될 수 있
                         .requestMatchers("/member","/member/name","/api/auth/kakao/logout", 
-                                "memory-stars/**","pets/**","pets/{petId}/stars",
+                                "memory-stars/**","pets/{petId}/stars",
                                 "memory-stars/comment/reply/**", "memory-stars/comment/{commentId}/reply", "memory-stars/comment/reply/{replyId}/like").authenticated() //사용자 인증 필요한 경우
                         .anyRequest().authenticated()
                 )

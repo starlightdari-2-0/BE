@@ -32,10 +32,10 @@ public class MemoryAlbumDao {
                 .orElseThrow(() -> new EntityNotFoundException("Album not found with id: " + id));
     }
 
-    public List<String> getRecent5ImgsByPetId(Long petId) {
-        Pageable pageable = (Pageable) PageRequest.of(0, 5);
-        return memoryStarRepository.findPetImagesByPetId(petId, pageable);
-    }
+//    public List<String> getRecent5ImgsByPetId(Long petId) {
+//        Pageable pageable = (Pageable) PageRequest.of(0, 5);
+//        return memoryStarRepository.findPetImagesByPetId(petId, pageable);
+//    }
 
 
 }
