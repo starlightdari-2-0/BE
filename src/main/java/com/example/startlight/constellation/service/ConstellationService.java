@@ -7,7 +7,6 @@ import com.example.startlight.constellation.entity.StarNode;
 import com.example.startlight.constellation.repository.ConstellationRepository;
 import com.example.startlight.constellation.repository.StarEdgeRepository;
 import com.example.startlight.constellation.repository.StarNodeRepository;
-import com.example.startlight.pet.dto.PetRepDto;
 import com.example.startlight.pet.dto.PetStarRepDto;
 import com.example.startlight.pet.dto.StarNodeWithMemoryDto;
 import com.example.startlight.pet.service.PetService;
@@ -81,7 +80,7 @@ public class ConstellationService {
             StarEdgeDto dto = StarEdgeDto.builder()
                     .con_id(conId)
                     .start_node_id(edge.get(0).longValue() + 1)
-                    .end_node_id(edge.get(1).longValue() - 1)
+                    .end_node_id(edge.get(1).longValue() + 1)
                             .build();
             edgeList.add(dto);
         }
@@ -139,7 +138,7 @@ public class ConstellationService {
 
             List<StarEdgeRepDto> starEdgeDtoList = starEdgeList.stream()
                     .map(starEdge -> StarEdgeRepDto.builder()
-                            .starPoint(starEdge.getStart_node_id())
+                            .startPoint(starEdge.getStart_node_id())
                             .endPoint(starEdge.getEnd_node_id())
                             .build())
                     .toList();
@@ -171,7 +170,7 @@ public class ConstellationService {
 
             List<StarEdgeRepDto> starEdgeDtoList = starEdgeList.stream()
                     .map(starEdge -> StarEdgeRepDto.builder()
-                            .starPoint(starEdge.getStart_node_id())
+                            .startPoint(starEdge.getStart_node_id())
                             .endPoint(starEdge.getEnd_node_id())
                             .build())
                     .toList();

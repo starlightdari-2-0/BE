@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @Builder
 public class StarEdgeRepDto {
-    private Long starPoint;
+    private Long startPoint;
     private Long endPoint;
 }
