@@ -1,4 +1,4 @@
-package com.example.startlight.pet.dto;
+package com.example.startlight.constellation.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import lombok.Getter;
 @Builder
 @Getter
 public class StarNodeWithMemoryDto {
+    private Long star_node_id;
     private Long node_id;
     private Integer x_star;
     private Integer y_star;

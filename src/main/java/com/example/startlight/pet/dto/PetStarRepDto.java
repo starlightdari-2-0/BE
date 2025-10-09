@@ -1,7 +1,7 @@
 package com.example.startlight.pet.dto;
 
 import com.example.startlight.constellation.dto.StarEdgeRepDto;
-import com.example.startlight.constellation.dto.StarNodeRepDto;
+import com.example.startlight.constellation.dto.StarNodeWithMemoryDto;
 import lombok.Builder;
 import lombok.Getter;
 

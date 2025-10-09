@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public interface StarNodeRepository extends JpaRepository<StarNode, Long> {
 
-    @Query("select n from StarNode n where n.con_id = :conId")
+    @Query("select n from StarNode n where n.constellation.con_id = :conId")
     List<StarNode> findByConstellationId(@Param("conId") Long conId);
 }
