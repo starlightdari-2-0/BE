@@ -31,6 +31,9 @@ public class MemoryStar {
     private Long memory_id;
 
     @Column(nullable = false)
+    private Long star_node_id;
+
+    @Column(nullable = false)
     private Long writer_id;
 
     @Column(nullable = false)
