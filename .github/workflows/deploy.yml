@@ -78,6 +78,7 @@ jobs:
             
               echo "backend 교체 (리빌드/강제재생성 금지)"
               docker compose up -d backend
+
             
               echo "상태 확인"
               docker compose ps
