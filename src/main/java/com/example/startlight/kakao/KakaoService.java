@@ -21,16 +21,19 @@ public class KakaoService {
 
     private final String clientId;
     private final String redirectUri;
+    private final String awsUrl;
     private final String KAUTH_TOKEN_URL_HOST = "https://kauth.kakao.com";
     private final String KAUTH_USER_URL_HOST = "https://kapi.kakao.com";
 
     @Autowired
     public KakaoService(
             @Value("${kakao.client.id}") String clientId,
-            @Value("${kakao.redirect.uri}") String uri
+            @Value("${kakao.redirect.uri}") String uri,
+            @Value("${aws.api}") String awsUrl
     ) {
         this.clientId = clientId;
         this.redirectUri = uri;
+        this.awsUrl = awsUrl;
     }
 
     public String getAccessTokenFromKakao(String code) {
@@ -121,5 +124,9 @@ public class KakaoService {
 
         log.info("Kakao Logout Response: {}", response);
         return response != null;  // 성공 여부를 반환
+    }
+
+    public String getMyPageUrl() {
+        return awsUrl + "/mypage";
     }
 }

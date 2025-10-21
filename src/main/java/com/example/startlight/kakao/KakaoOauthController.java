@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Cookie;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -23,7 +24,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/kakao")
-public class KakaoOauthController {
+public class KakaoOauthController{
     private final KakaoService kakaoService;
     private final JWTUtils jwtTokenProvider;
     private final MemberService memberService;
@@ -87,14 +88,7 @@ public class KakaoOauthController {
                 Long id =  (Long) principal.get("id");
                 log.info("Kakao User ID: {}", id);
             }
-
-            // 6. 응답 반환
-//            return ResponseEntity.ok(Map.of(
-//                    "message", "Login successful!",
-//                    "user", userInfo,
-//                    "token", jwtToken
-//            ));
-            String redirectUri = "http://3.37.55.176:3000/mypage";
+            String redirectUri = kakaoService.getMyPageUrl();
             return ResponseEntity.ok().body(Map.of("redirectUri", redirectUri));
 
         } catch (Exception e) {
