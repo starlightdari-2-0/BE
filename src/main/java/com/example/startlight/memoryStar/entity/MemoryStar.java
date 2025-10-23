@@ -5,11 +5,9 @@ import com.example.startlight.memLike.entity.MemLike;
 import com.example.startlight.memoryStar.dto.MemoryStarUpdateDto;
 import com.example.startlight.starList.entity.StarList;
 import jakarta.persistence.*;
+import jakarta.persistence.Table;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DynamicInsert;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -47,8 +45,6 @@ public class MemoryStar {
 
     private ActivityCtg activityCtg;
 
-    private EmotionCtg emotionCtg;
-
     private String content;
 
     @LastModifiedDate
@@ -63,12 +59,16 @@ public class MemoryStar {
     private Boolean updated = false;
 
     @Builder.Default
-    private Boolean usedToGenerate = false;
+    private Integer like1 = 0;
 
     @Builder.Default
-    @ColumnDefault("0")
-    @Column(nullable = false)
-    private Integer likes = 0;  // 기본값 설정
+    private Integer like2 = 0;
+
+    @Builder.Default
+    private Integer like3 = 0;
+
+    @Column(insertable = false, updatable = false)
+    private Integer totalLikes;
 
     @Builder.Default
     @ColumnDefault("0")
@@ -77,8 +77,6 @@ public class MemoryStar {
 
     @Setter
     private String img_url;
-
-    private Boolean isAnimal;
 
     @OneToMany
     private List<MemComment> memComments;
@@ -89,18 +87,37 @@ public class MemoryStar {
     public void updateMemoryStar(MemoryStarUpdateDto dto) {
         this.name = dto.getName();
         this.activityCtg = dto.getActivityCtg();
-        this.emotionCtg = dto.getEmotionCtg();
         this.content = dto.getContent();
         this.shared = dto.getShared();
         this.updated = true;
     }
 
-    public void createLike() {
-        this.likes++;
+    public void createLike(int type) {
+        switch (type) {
+            case 1:
+                this.like1++;
+                break;
+            case 2:
+                this.like2++;
+                break;
+            case 3:
+                this.like3++;
+                break;
+        }
     }
 
-    public void deleteLike() {
-        this.likes--;
+    public void deleteLike(int type) {
+        switch (type) {
+            case 1:
+                this.like1--;
+                break;
+            case 2:
+                this.like2--;
+                break;
+            case 3:
+                this.like3--;
+                break;
+        }
     }
 
     public void createComment() {
@@ -111,5 +128,4 @@ public class MemoryStar {
         this.commentNumber--;
     }
 
-    public void updateUsedToGenerate() { this.usedToGenerate = true; }
 }
