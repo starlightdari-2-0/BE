@@ -44,14 +44,14 @@ public class MemoryStarController {
 //        return ResponseEntity.status(HttpStatus.OK).body(starById);
 //    }
 //
-//    @PatchMapping("/{memoryId}")
-//    public ResponseEntity<MemoryStarRepWithComDto> updateMemoryStar(
-//            @PathVariable Long memoryId,
-//            @ModelAttribute MemoryStarUpdateDto memoryStarReqDto
-//    ) throws IOException {
-//        MemoryStarRepWithComDto memoryStar = memoryStarService.updateMemoryStar(memoryId, memoryStarReqDto);
-//        return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
-//    }
+    @PatchMapping("/{memoryId}")
+    public ResponseEntity<MemoryStarRepWithComDto> updateMemoryStar(
+            @PathVariable Long memoryId,
+            @ModelAttribute MemoryStarUpdateDto memoryStarReqDto
+    ) throws IOException {
+        MemoryStarRepWithComDto memoryStar = memoryStarService.updateMemoryStar(memoryId, memoryStarReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
+    }
 //
 //    @DeleteMapping("/{memoryId}")
 //    public ResponseEntity<String> deleteMemoryStar(
