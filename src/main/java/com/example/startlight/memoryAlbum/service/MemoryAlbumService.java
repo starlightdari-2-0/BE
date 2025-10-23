@@ -107,34 +107,34 @@ public class MemoryAlbumService {
                 .opened(memoryAlbum.getOpened()).build();
     }
 
-    public LetterGenerateWithFileReqDto generateDtoWithFile(Long petId) {
-        Pet selectedPet = petDao.selectPet(petId);
-        Long userId = UserUtil.getCurrentUserId();
-        Member member = memberDao.selectMember(userId);
-
-        Pageable pageable = PageRequest.of(0, 1);
-        List<MemoryStar> unusedMemory = memoryStarRepository.findMemoryStarByPetIdUnused(petId, pageable);
-        if(!unusedMemory.isEmpty()) {
-            MemoryStar memoryStar = unusedMemory.get(0);
-            memoryStar.updateUsedToGenerate();
-
-            List<String> texts = new ArrayList<>();
-            String text = memoryStar.getContent();
-            texts.add(text);
-            return LetterGenerateWithFileReqDto.builder()
-                    .character(selectedPet.getPersonality().getDescription())
-                    .breed(selectedPet.getSpecies())
-                    .texts(texts)
-                    .pet_id(selectedPet.getPet_id())
-                    .pet_name(selectedPet.getPet_name())
-                    .member_name(member.getSt_nickname())
-                    .nickname(selectedPet.getNickname())
-                    .build();
-        }
-        else {
-            return null;
-        }
-    }
+//    public LetterGenerateWithFileReqDto generateDtoWithFile(Long petId) {
+//        Pet selectedPet = petDao.selectPet(petId);
+//        Long userId = UserUtil.getCurrentUserId();
+//        Member member = memberDao.selectMember(userId);
+//
+//        Pageable pageable = PageRequest.of(0, 1);
+//        List<MemoryStar> unusedMemory = memoryStarRepository.findMemoryStarByPetIdUnused(petId, pageable);
+//        if(!unusedMemory.isEmpty()) {
+//            MemoryStar memoryStar = unusedMemory.get(0);
+//            //memoryStar.updateUsedToGenerate();
+//
+//            List<String> texts = new ArrayList<>();
+//            String text = memoryStar.getContent();
+//            texts.add(text);
+//            return LetterGenerateWithFileReqDto.builder()
+//                    .character(selectedPet.getPersonality().getDescription())
+//                    .breed(selectedPet.getSpecies())
+//                    .texts(texts)
+//                    .pet_id(selectedPet.getPet_id())
+//                    .pet_name(selectedPet.getPet_name())
+//                    .member_name(member.getSt_nickname())
+//                    .nickname(selectedPet.getNickname())
+//                    .build();
+//        }
+//        else {
+//            return null;
+//        }
+//    }
 
     public LetterGenerateWithFileReqDto generateDtoBirthDeath(Long petId, Integer num) {
         Pet selectedPet = petDao.selectPet(petId);

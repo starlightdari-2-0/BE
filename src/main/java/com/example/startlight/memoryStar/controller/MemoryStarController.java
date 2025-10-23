@@ -14,21 +14,21 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-//@RestController
-//@RequiredArgsConstructor
-//@RequestMapping("/memory-stars")
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/memory-stars")
 public class MemoryStarController {
-//    private final MemoryStarService memoryStarService;
-//    private final MemberService memberService;
-//    private final MemCommentService memCommentService;
-//
-//    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    public ResponseEntity<MemoryStarRepDto> createMemoryStar(
-//            @ModelAttribute MemoryStarReqDto memoryStarReqDto
-//    ) throws IOException {
-//        MemoryStarRepDto memoryStar = memoryStarService.createMemoryStar(memoryStarReqDto);
-//        return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
-//    }
+    private final MemoryStarService memoryStarService;
+    private final MemberService memberService;
+    private final MemCommentService memCommentService;
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<MemoryStarRepDto> createMemoryStar(
+            @ModelAttribute MemoryStarReqDto memoryStarReqDto
+    ) throws IOException {
+        MemoryStarRepDto memoryStar = memoryStarService.createMemoryStar(memoryStarReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
+    }
 //
 //    // 댓글이랑 같이 조회
 //    @GetMapping("/{memoryId}")

@@ -69,20 +69,20 @@ public class MemoryStarDao {
 
     //like
 
-    public MemoryStar pressLike(Long id, Long userId) {
-        MemoryStar memoryStar = selectMemoryStarById(id);
-        memoryStar.createLike();
-        MemLike memLike = MemLike.builder().member_id(userId).memoryStar(memoryStar).build();
-        memLikeRepository.save(memLike);
-        return memoryStar;
-    }
-
-    public MemoryStar deleteLike(Long id, Long userId) {
-        memLikeRepository.deleteByMemoryAndMember(id, userId);
-        MemoryStar memoryStar = selectMemoryStarById(id);
-        memoryStar.deleteLike();
-        return memoryStar;
-    }
+//    public MemoryStar pressLike(Long id, Long userId) {
+//        MemoryStar memoryStar = selectMemoryStarById(id);
+//        memoryStar.createLike();
+//        MemLike memLike = MemLike.builder().member_id(userId).memoryStar(memoryStar).build();
+//        memLikeRepository.save(memLike);
+//        return memoryStar;
+//    }
+//
+//    public MemoryStar deleteLike(Long id, Long userId) {
+//        memLikeRepository.deleteByMemoryAndMember(id, userId);
+//        MemoryStar memoryStar = selectMemoryStarById(id);
+//        memoryStar.deleteLike();
+//        return memoryStar;
+//    }
 
     public boolean findIfLiked(Long id, Long userId) {
         return memLikeRepository.existsByMemoryAndMember(id, userId);

@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class MemoryAlbumScheduleService {
     private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
-    private final MemoryAlbumFlaskService memoryAlbumFlaskService;
+//    private final MemoryAlbumFlaskService memoryAlbumFlaskService;
     private final PetDao petDao;
 
 
@@ -53,7 +53,7 @@ public class MemoryAlbumScheduleService {
     // ✅ 실행할 작업 함수
     private void executeTask(Long petId) {
         System.out.println("📅 Task executed at: " + LocalDateTime.now());
-        memoryAlbumFlaskService.generateMemoryAlbum(petId,0);
+//        memoryAlbumFlaskService.generateMemoryAlbum(petId,0);
     }
 
     // ✅ 작업 종료 (필요 시 호출)
@@ -121,14 +121,14 @@ public class MemoryAlbumScheduleService {
     private void executeBirthTask(Long petId) {
         System.out.println("🎂 Executing Birth Task for petId: " + petId);
         // 실행 로직 추가
-        memoryAlbumFlaskService.generateMemoryAlbum(petId,1);
+//        memoryAlbumFlaskService.generateMemoryAlbum(petId,1);
     }
 
     // ✅ 기일 처리 함수
     private void executeDeathTask(Long petId) {
         System.out.println("🕯️ Executing Death Task for petId: " + petId);
         // 실행 로직 추가
-        memoryAlbumFlaskService.generateMemoryAlbum(petId,2);
+//        memoryAlbumFlaskService.generateMemoryAlbum(petId,2);
     }
 
     // 랜덤 생성 (일주일마다 반복 실행)
@@ -156,6 +156,6 @@ public class MemoryAlbumScheduleService {
     private void executeTaskRandom(Long petId) {
         System.out.println("Executing Random Task for petId: " + petId);
         // 실행 로직 추가
-        memoryAlbumFlaskService.generateMemoryAlbum(petId,3);
+//        memoryAlbumFlaskService.generateMemoryAlbum(petId,3);
     }
 }
