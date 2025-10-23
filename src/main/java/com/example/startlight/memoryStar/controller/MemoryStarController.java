@@ -29,7 +29,7 @@ public class MemoryStarController {
         MemoryStarRepDto memoryStar = memoryStarService.createMemoryStar(memoryStarReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
     }
-//
+
 //    // 댓글이랑 같이 조회
 //    @GetMapping("/{memoryId}")
 //    public ResponseEntity<MemoryStarRepWithComDto> selectMemoryStarWithCom(@PathVariable Long memoryId) {
@@ -43,7 +43,6 @@ public class MemoryStarController {
 //        MemoryStarRepDto starById = memoryStarService.getStarById(memoryId);
 //        return ResponseEntity.status(HttpStatus.OK).body(starById);
 //    }
-//
     @PatchMapping("/{memoryId}")
     public ResponseEntity<MemoryStarRepWithComDto> updateMemoryStar(
             @PathVariable Long memoryId,
@@ -52,15 +51,15 @@ public class MemoryStarController {
         MemoryStarRepWithComDto memoryStar = memoryStarService.updateMemoryStar(memoryId, memoryStarReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
     }
-//
-//    @DeleteMapping("/{memoryId}")
-//    public ResponseEntity<String> deleteMemoryStar(
-//            @PathVariable Long memoryId
-//    ) {
-//        memoryStarService.deleteMemoryStar(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body("Success delete memory star id : " + memoryId);
-//    }
-//
+
+    @DeleteMapping("/{memoryId}")
+    public ResponseEntity<String> deleteMemoryStar(
+            @PathVariable Long memoryId
+    ) {
+        memoryStarService.deleteMemoryStar(memoryId);
+        return ResponseEntity.status(HttpStatus.OK).body("Success delete memory star id : " + memoryId);
+    }
+
 //    @GetMapping("/public")
 //    public ResponseEntity<List<MemoryStarSimpleRepDto>> getAllMemoryStar() {
 //        List<MemoryStarSimpleRepDto> allPublicMemoryStar = memoryStarService.findAllPublicMemoryStar();
