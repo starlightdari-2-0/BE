@@ -51,7 +51,7 @@ public class MemoryStarService {
                 .memoryStarRepDto(mapperDto)
                 .memComments(allByMemoryId).build();
 
-        dto.getMemoryStarRepDto().setIsLiked(ifLiked);
+        //dto.getMemoryStarRepDto().setIsLiked(ifLiked);
         return dto;
     }
 
@@ -60,13 +60,12 @@ public class MemoryStarService {
         Long userId = UserUtil.getCurrentUserId();
         boolean ifLiked = memoryStarDao.findIfLiked(id, userId);
         MemoryStarRepDto dto = mapper.toDto(memoryStar);
-        dto.setIsLiked(ifLiked);
+        //dto.setIsLiked(ifLiked);
         return dto;
     }
 
 
     public MemoryStarRepDto createMemoryStar(MemoryStarReqDto memoryStarReqDto) throws IOException {
-        StarList starListById = starListDao.findStarListById(memoryStarReqDto.getStar_id());
         Long userId = UserUtil.getCurrentUserId();
         Member member = memberDao.selectMember(userId);
         memoryStarReqDto.setWriter_id(userId);
@@ -75,15 +74,8 @@ public class MemoryStarService {
         MemoryStar createdStar = memoryStarDao.createMemoryStar(memoryStar);
         String memoryImgUrls = s3Service.uploadMemoryImg(memoryStarReqDto.getImg_url(), createdStar.getMemory_id());
         createdStar.setImg_url(memoryImgUrls);
-        starListDao.updateStarWritten(createdStar, memoryStarReqDto.getStar_id());
         memberService.updateMemberMemory();
-
-        //MemoryStar 개수 체크
-        Integer countStar = memoryStarRepository.countMemoryStarByPetId(memoryStar.getPet_id());
-        Pet selectedPet = petDao.selectPet(memoryStar.getPet_id());
-
         return mapper.toDto(createdStar);
-
     }
 
     public MemoryStarRepWithComDto updateMemoryStar(Long memoryId, MemoryStarUpdateDto memoryStarUpdateDto) throws IOException {
@@ -120,23 +112,23 @@ public class MemoryStarService {
         return mapper.toSimpleRepDtoList(allMyMemoryStar);
     }
 
-    public MemoryStarLikeDto createLike(Long id) {
-        Long userId = UserUtil.getCurrentUserId();
-        MemoryStar memoryStar = memoryStarDao.pressLike(id, userId);
-        return MemoryStarLikeDto.builder()
-                .memoryId(memoryStar.getMemory_id())
-                .isLiked(true)
-                .likes(memoryStar.getLikes())
-                .build();
-    }
-
-    public MemoryStarLikeDto deleteLike(Long id) {
-        Long userId = UserUtil.getCurrentUserId();
-        MemoryStar memoryStar = memoryStarDao.deleteLike(id, userId);
-        return MemoryStarLikeDto.builder()
-                .memoryId(memoryStar.getMemory_id())
-                .isLiked(false)
-                .likes(memoryStar.getLikes())
-                .build();
-    }
+//    public MemoryStarLikeDto createLike(Long id) {
+//        Long userId = UserUtil.getCurrentUserId();
+//        MemoryStar memoryStar = memoryStarDao.pressLike(id, userId);
+//        return MemoryStarLikeDto.builder()
+//                .memoryId(memoryStar.getMemory_id())
+//                .isLiked(true)
+//                .likes(memoryStar.getLikes())
+//                .build();
+//    }
+//
+//    public MemoryStarLikeDto deleteLike(Long id) {
+//        Long userId = UserUtil.getCurrentUserId();
+//        MemoryStar memoryStar = memoryStarDao.deleteLike(id, userId);
+//        return MemoryStarLikeDto.builder()
+//                .memoryId(memoryStar.getMemory_id())
+//                .isLiked(false)
+//                .likes(memoryStar.getLikes())
+//                .build();
+//    }
 }

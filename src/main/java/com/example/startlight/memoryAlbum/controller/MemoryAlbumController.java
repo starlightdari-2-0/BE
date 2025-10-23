@@ -4,7 +4,6 @@ import com.example.startlight.memoryAlbum.dto.AlbumByPetRepDto;
 import com.example.startlight.memoryAlbum.dto.LetterGeneratedFileRepDto;
 import com.example.startlight.memoryAlbum.dto.MemoryAlbumRepDto;
 import com.example.startlight.memoryAlbum.dto.MemoryAlbumSimpleDto;
-import com.example.startlight.memoryAlbum.service.MemoryAlbumFlaskService;
 import com.example.startlight.memoryAlbum.service.MemoryAlbumScheduleService;
 import com.example.startlight.memoryAlbum.service.MemoryAlbumService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,15 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("memory-album")
 public class MemoryAlbumController {
-    private final MemoryAlbumFlaskService memoryAlbumFlaskService;
     private final MemoryAlbumScheduleService memoryAlbumScheduleService;
     private final MemoryAlbumService memoryAlbumService;
 
-    @GetMapping()
-    public ResponseEntity<?> createMemoryAlbum() {
-        memoryAlbumFlaskService.generateMemoryAlbum(52L,0);
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping()
+//    public ResponseEntity<?> createMemoryAlbum() {
+//        memoryAlbumFlaskService.generateMemoryAlbum(52L,0);
+//        return ResponseEntity.ok().build();
+//    }
 
     @GetMapping("/status")
     public ResponseEntity<List<AlbumByPetRepDto>> getAllMemoryAlbumStatus() {
@@ -90,15 +88,15 @@ public class MemoryAlbumController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 
-    @GetMapping("/random")
-    public ResponseEntity<?> getRandomMemoryAlbum() {
-        memoryAlbumFlaskService.generateMemoryAlbum(102L,3);
-        return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/birth")
-    public ResponseEntity<?> getBirthMemoryAlbum() {
-        memoryAlbumFlaskService.generateMemoryAlbum(102L,1);
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping("/random")
+//    public ResponseEntity<?> getRandomMemoryAlbum() {
+//        memoryAlbumFlaskService.generateMemoryAlbum(102L,3);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    @GetMapping("/birth")
+//    public ResponseEntity<?> getBirthMemoryAlbum() {
+//        memoryAlbumFlaskService.generateMemoryAlbum(102L,1);
+//        return ResponseEntity.ok().build();
+//    }
 }
