@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth/kakao")
+@RequestMapping("/auth/kakao")
 public class KakaoOauthController{
     private final KakaoService kakaoService;
     private final JWTUtils jwtTokenProvider;
