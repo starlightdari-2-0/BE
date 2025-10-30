@@ -82,32 +82,4 @@ jobs:
             
               echo "상태 확인"
               docker compose ps
-              docker logs --tail=100 backend || true      
-
-#      - name: 이미지 빌드
-#        run: docker build -t ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be .
-#      - name: 도커허브에 이미지 푸시
-#        run: docker push ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
-#      - name: AWS EC2에 ssh 접속 후 배포
-#        uses: appleboy/ssh-action@master
-#        with:
-#          host: ${{ secrets.AWS_IP }}
-#          port: 22
-#          username: ubuntu
-#          key: ${{ secrets.AWS_KEY }}
-#          script: |
-#            docker stop backend || true
-#            docker rm backend || true
-#
-#            # 기존 백엔드 이미지 삭제
-#            docker rmi ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be || true
-#            docker pull ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
-#
-#            # 백엔드 컨테이너만 재시작
-#            echo "🔄 백엔드 컨테이너 재시작"
-#            docker-compose up -d --force-recreate --build backend
-#
-#            # 상태 확인 및 로그 출력
-#            echo "✅ 상태 확인"
-#            docker ps -a
-#            docker logs backend
+              docker logs --tail=100 backend || true
