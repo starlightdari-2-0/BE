@@ -38,16 +38,32 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        // 1) 프리플라이트 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers( "/api/auth/**").permitAll()
+
+                        // 2) 공개 엔드포인트 (반드시 /api 접두사 + 맨 앞에 /)
+                        .requestMatchers(
+                                "/api/auth/**",
+                                "/api/health", "/api/status",
+                                "/api/star/**",
+                                "/api/memory-stars/{memoryId}/comments",
+                                "/api/memory-stars/public",
+                                "/api/star/getList",
+                                "/api/uploads/**",
+                                "/api/post/**",
+                                "/api/post/get",
+                                "/api/funeral/**",
+                                "/api/chat/**",
+                                "/api/memory-album/**",
+                                "/api/constellation/**",
+                                "/api/constellation/each/**"
+                        ).permitAll()
+
+                        // 3) 그 외 API는 인증 필요
                         .requestMatchers("/api/**").authenticated()
-                        .requestMatchers("star/**","memory-stars/{memoryId}/comments","memory-stars/public",
-                                "star/getList","uploads", "post/**", "post/get", "funeral/**","chat/**", "memory-album/**",
-                                "/constellation/**", "/constellation/each/**").permitAll() //토큰 인증이 필요하지 않은경우 설정 -- 인증이 필요한 경로가 모두에게 허용되면 익명사용자 설정이 될 수 있
-                        .requestMatchers("/member","/member/name","/api/auth/kakao/logout", 
-                                "memory-stars/**","pets/{petId}/stars","/pets/**",
-                                "memory-stars/comment/reply/**", "memory-stars/comment/{commentId}/reply", "memory-stars/comment/reply/{replyId}/like").authenticated() //사용자 인증 필요한 경우
-                        .anyRequest().authenticated()
+
+                        // 4) 비-API 경로는 프론트/Caddy가 처리 → 여기선 열어둠
+                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
