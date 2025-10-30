@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.Map;
 
 
@@ -89,7 +91,9 @@ public class KakaoOauthController{
                 log.info("Kakao User ID: {}", id);
             }
             String redirectUri = kakaoService.getMyPageUrl();
-            return ResponseEntity.ok().body(Map.of("redirectUri", redirectUri));
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create(redirectUri))
+                    .build();
 
         } catch (Exception e) {
             log.error("Error during Kakao login", e);
