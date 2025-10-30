@@ -12,16 +12,34 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 @Component
 public class JWTRequestFilter extends OncePerRequestFilter {
     private static final Logger logger = LoggerFactory.getLogger(JWTRequestFilter.class);
+    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
+    private static final List<String> SKIP_PATHS = List.of(
+            "/api/auth/**",
+            "/api/health",
+            "/api/status"
+    );
     private final JWTUtils jwtUtils;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        // Skip JWT processing for CORS preflight and public auth/health endpoints
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+        String uri = request.getRequestURI();
+        return SKIP_PATHS.stream().anyMatch(pattern -> PATH_MATCHER.match(pattern, uri));
+    }
 
     @Autowired
     public JWTRequestFilter(JWTUtils jwtUtils) {

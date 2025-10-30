@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers( "/api/auth/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
                         .requestMatchers("star/**","memory-stars/{memoryId}/comments","memory-stars/public",
                                 "star/getList","uploads", "post/**", "post/get", "funeral/**","chat/**", "memory-album/**",
                                 "/constellation/**", "/constellation/each/**").permitAll() //토큰 인증이 필요하지 않은경우 설정 -- 인증이 필요한 경로가 모두에게 허용되면 익명사용자 설정이 될 수 있
