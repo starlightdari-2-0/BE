@@ -58,6 +58,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
                 "http://localhost:3000",
                 "http://localhost:8080",
+                "https://starlight.site",
                 awsApiUrl + ":3000",
                 awsApiUrl + ":8080",
                 awsApiUrl));
