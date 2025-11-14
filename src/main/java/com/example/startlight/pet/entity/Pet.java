@@ -79,6 +79,7 @@ public class Pet {
                 .personality(dto.getPersonality())
                 .nickname(dto.getNickname())
                 .context(dto.getContext())
+                .con_id(dto.getCon_id())
                 .build();
     }
 }

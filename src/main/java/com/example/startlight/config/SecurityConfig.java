@@ -38,10 +38,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        // 1) 프리플라이트 허용
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // 2) 공개 엔드포인트 (반드시 /api 접두사 + 맨 앞에 /)
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/api/health", "/api/status",
@@ -59,10 +57,8 @@ public class SecurityConfig {
                                 "/api/constellation/each/**"
                         ).permitAll()
 
-                        // 3) 그 외 API는 인증 필요
-                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/api/pets/**").authenticated()
 
-                        // 4) 비-API 경로는 프론트/Caddy가 처리 → 여기선 열어둠
                         .anyRequest().permitAll()
                 )
                 .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
@@ -94,7 +90,6 @@ public class SecurityConfig {
     public HttpFirewall allowSemicolonHttpFirewall() {
         StrictHttpFirewall firewall = new StrictHttpFirewall();
 
-        // ✅ 세미콜론 허용 설정
         firewall.setAllowSemicolon(true);
 
         return firewall;
