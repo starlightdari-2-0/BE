@@ -53,9 +53,6 @@ public class MemoryStar {
     private Boolean shared = false;  // 기본값 설정
 
     @Builder.Default
-    private Boolean updated = false;
-
-    @Builder.Default
     private Integer like1 = 0;
 
     @Builder.Default
@@ -83,7 +80,6 @@ public class MemoryStar {
         this.activityCtg = dto.getActivityCtg();
         this.content = dto.getContent();
         this.shared = dto.getShared();
-        this.updated = true;
     }
 
     public void createLike(int type) {
