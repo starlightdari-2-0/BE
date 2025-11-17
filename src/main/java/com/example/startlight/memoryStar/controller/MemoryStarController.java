@@ -30,24 +30,13 @@ public class MemoryStarController {
         return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
     }
 
-//    @GetMapping("/{memoryId}")
-//    public ResponseEntity<MemoryStarRepDto> getMemoryStar(@PathVariable("memoryId") Long memoryId) {
-//
-//    }
-
-//    // 댓글이랑 같이 조회
-//    @GetMapping("/{memoryId}")
-//    public ResponseEntity<MemoryStarRepWithComDto> selectMemoryStarWithCom(@PathVariable Long memoryId) {
-//        MemoryStarRepWithComDto memoryStarRepDto = memoryStarService.selectStarById(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body(memoryStarRepDto);
-//    }
-
     //글만 조회
-//    @GetMapping("/{memoryId}/memory")
-//    public ResponseEntity<MemoryStarRepDto> selectMemoryStarByMemId(@PathVariable Long memoryId) {
-//        MemoryStarRepDto starById = memoryStarService.getStarById(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body(starById);
-//    }
+    @GetMapping("/{memoryId}")
+    public ResponseEntity<MemoryStarRepDto> selectMemoryStarByMemId(@PathVariable Long memoryId) {
+        MemoryStarRepDto starById = memoryStarService.getStarById(memoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(starById);
+    }
+
     @PatchMapping("/{memoryId}")
     public ResponseEntity<MemoryStarRepWithComDto> updateMemoryStar(
             @PathVariable Long memoryId,
