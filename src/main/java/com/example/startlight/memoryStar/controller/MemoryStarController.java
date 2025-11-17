@@ -30,6 +30,11 @@ public class MemoryStarController {
         return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
     }
 
+//    @GetMapping("/{memoryId}")
+//    public ResponseEntity<MemoryStarRepDto> getMemoryStar(@PathVariable("memoryId") Long memoryId) {
+//
+//    }
+
 //    // 댓글이랑 같이 조회
 //    @GetMapping("/{memoryId}")
 //    public ResponseEntity<MemoryStarRepWithComDto> selectMemoryStarWithCom(@PathVariable Long memoryId) {
