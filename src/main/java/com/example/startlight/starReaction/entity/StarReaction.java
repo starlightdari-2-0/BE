@@ -2,7 +2,6 @@ package com.example.startlight.starReaction.entity;
 
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.memoryStar.entity.MemoryStar;
-import com.example.startlight.reactionType.entity.ReactionType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +12,7 @@ import lombok.NoArgsConstructor;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_star_reaction_star_user_type",
-                        columnNames = {"star_id", "member_id", "type_id"}
+                        columnNames = {"star_id", "member_id", "reaction_type"}
                 )
         })
 @NoArgsConstructor
@@ -32,7 +31,7 @@ public class StarReaction {
     @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "reaction_type", nullable = false, length = 20)
     private ReactionType reactionType;
 }
