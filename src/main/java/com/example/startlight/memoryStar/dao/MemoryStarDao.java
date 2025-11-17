@@ -1,9 +1,6 @@
 package com.example.startlight.memoryStar.dao;
 
 import com.example.startlight.exception.UnauthorizedAccessException;
-import com.example.startlight.kakao.util.UserUtil;
-import com.example.startlight.memLike.entity.MemLike;
-import com.example.startlight.memLike.repository.MemLikeRepository;
 import com.example.startlight.memoryStar.dto.MemoryStarUpdateDto;
 import com.example.startlight.memoryStar.repository.MemoryStarRepository;
 import com.example.startlight.memoryStar.entity.MemoryStar;
@@ -20,7 +17,6 @@ import java.util.Optional;
 public class MemoryStarDao {
 
     private final MemoryStarRepository memoryStarRepository;
-    private final MemLikeRepository memLikeRepository;
 
     public MemoryStar createMemoryStar(MemoryStar memoryStar) {
         return memoryStarRepository.save(memoryStar);
@@ -65,26 +61,5 @@ public class MemoryStarDao {
 
     public List<MemoryStar> getAllMyMemoryStar(Long userId) {
         return memoryStarRepository.findAllByWriterId(userId);
-    }
-
-    //like
-
-//    public MemoryStar pressLike(Long id, Long userId) {
-//        MemoryStar memoryStar = selectMemoryStarById(id);
-//        memoryStar.createLike();
-//        MemLike memLike = MemLike.builder().member_id(userId).memoryStar(memoryStar).build();
-//        memLikeRepository.save(memLike);
-//        return memoryStar;
-//    }
-//
-//    public MemoryStar deleteLike(Long id, Long userId) {
-//        memLikeRepository.deleteByMemoryAndMember(id, userId);
-//        MemoryStar memoryStar = selectMemoryStarById(id);
-//        memoryStar.deleteLike();
-//        return memoryStar;
-//    }
-
-    public boolean findIfLiked(Long id, Long userId) {
-        return memLikeRepository.existsByMemoryAndMember(id, userId);
     }
 }

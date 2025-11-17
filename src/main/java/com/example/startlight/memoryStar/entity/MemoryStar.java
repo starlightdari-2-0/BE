@@ -1,14 +1,12 @@
 package com.example.startlight.memoryStar.entity;
 
 import com.example.startlight.memComment.entity.MemComment;
-import com.example.startlight.memLike.entity.MemLike;
 import com.example.startlight.memoryStar.dto.MemoryStarUpdateDto;
-import com.example.startlight.starList.entity.StarList;
+import com.example.startlight.starReaction.entity.ReactionType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -53,10 +51,7 @@ public class MemoryStar {
     @Builder.Default
     @ColumnDefault("false")
     @Column(nullable = false)
-    private Boolean shared = false;  // 기본값 설정
-
-    @Builder.Default
-    private Boolean updated = false;
+    private Boolean shared = false;
 
     @Builder.Default
     private Integer like1 = 0;
@@ -73,50 +68,40 @@ public class MemoryStar {
     @Builder.Default
     @ColumnDefault("0")
     @Column(nullable = false)
-    private Integer commentNumber = 0;  // 기본값 설정
+    private Integer commentNumber = 0;
 
     @Setter
     private String img_url;
 
     @OneToMany
     private List<MemComment> memComments;
-
-    @OneToMany
-    private List<MemLike> memLikes;
     
     public void updateMemoryStar(MemoryStarUpdateDto dto) {
         this.name = dto.getName();
         this.activityCtg = dto.getActivityCtg();
         this.content = dto.getContent();
         this.shared = dto.getShared();
-        this.updated = true;
     }
 
-    public void createLike(int type) {
+    public void increaseLike(ReactionType type) {
         switch (type) {
-            case 1:
-                this.like1++;
-                break;
-            case 2:
-                this.like2++;
-                break;
-            case 3:
-                this.like3++;
-                break;
+            case LIKE1 -> this.like1++;
+            case LIKE2 -> this.like2++;
+            case LIKE3 -> this.like3++;
         }
     }
 
-    public void deleteLike(int type) {
+    public void decreaseLike(ReactionType type) {
         switch (type) {
-            case 1:
-                this.like1--;
-                break;
-            case 2:
-                this.like2--;
-                break;
-            case 3:
-                this.like3--;
-                break;
+            case LIKE1 -> {
+                if (this.like1 > 0) this.like1--;
+            }
+            case LIKE2 -> {
+                if (this.like2 > 0) this.like2--;
+            }
+            case LIKE3 -> {
+                if (this.like3 > 0) this.like3--;
+            }
         }
     }
 

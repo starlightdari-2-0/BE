@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -33,26 +34,11 @@ public class MemoryStarRepDto {
 
     private Boolean shared;
 
-    private Boolean updated;
-
-    private Integer like1;
-
-    private Integer like2;
-
-    private Integer like3;
-
     private Integer totalLikes;
 
+    private Map<String, ReactionDto> reactions;
+
     private Integer commentNumber;
-
-    @Builder.Default
-    private Boolean isLiked1 = false;
-
-    @Builder.Default
-    private Boolean isLiked2 = false;
-
-    @Builder.Default
-    private Boolean isLiked3 = false;
 
     private String img_url;
 }
