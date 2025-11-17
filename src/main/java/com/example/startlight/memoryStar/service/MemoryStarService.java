@@ -44,46 +44,6 @@ public class MemoryStarService {
     private final MemoryStarMapper mapper = MemoryStarMapper.INSTANCE;
     private final StarReactionRepository starReactionRepository;
 
-    public MemoryStarRepDto getStarById(Long id) {
-        MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(id);
-        Long userId = UserUtil.getCurrentUserId();
-
-        List<StarReaction> myReactions =
-                starReactionRepository.findByMemoryIdAndMemberId(memoryStar.getMemory_id(), userId);
-
-        Set<ReactionType> myTypes = myReactions.stream()
-                .map(StarReaction::getReactionType)
-                .collect(Collectors.toSet());
-
-        Map<String, ReactionDto> reactions = new LinkedHashMap<>();
-        Integer totalLikes = 0;
-
-        for (ReactionType type : ReactionType.values()) {
-            Integer count = getCountForType(type, memoryStar);
-            boolean isLiked = myTypes.contains(type);
-
-            reactions.put(
-                    type.name(),
-                    new ReactionDto(type.name(), count, isLiked)
-            );
-            totalLikes += count;
-        }
-
-        MemoryStarRepDto dto = mapper.toDto(memoryStar);
-        dto.setReactions(reactions);
-        dto.setTotalLikes(totalLikes);
-        return dto;
-    }
-
-    private Integer getCountForType(ReactionType type, MemoryStar star) {
-        return switch (type) {
-            case LIKE1 -> star.getLike1();
-            case LIKE2 -> star.getLike2();
-            case LIKE3 -> star.getLike3();
-        };
-    }
-
-
     public MemoryStarRepDto createMemoryStar(MemoryStarReqDto memoryStarReqDto) throws IOException {
         Long userId = UserUtil.getCurrentUserId();
         Member member = memberDao.selectMember(userId);
