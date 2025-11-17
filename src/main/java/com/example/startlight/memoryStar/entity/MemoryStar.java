@@ -1,14 +1,11 @@
 package com.example.startlight.memoryStar.entity;
 
 import com.example.startlight.memComment.entity.MemComment;
-import com.example.startlight.memLike.entity.MemLike;
 import com.example.startlight.memoryStar.dto.MemoryStarUpdateDto;
-import com.example.startlight.starList.entity.StarList;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.hibernate.annotations.*;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -80,9 +77,6 @@ public class MemoryStar {
 
     @OneToMany
     private List<MemComment> memComments;
-
-    @OneToMany
-    private List<MemLike> memLikes;
     
     public void updateMemoryStar(MemoryStarUpdateDto dto) {
         this.name = dto.getName();

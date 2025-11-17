@@ -42,7 +42,6 @@ public class MemoryStarService {
     public MemoryStarRepWithComDto selectStarById(Long id) {
         MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(id);
         Long userId = UserUtil.getCurrentUserId();
-        boolean ifLiked = memoryStarDao.findIfLiked(id, userId);
         MemoryStarRepDto mapperDto = mapper.toDto(memoryStar);
 
         List<MemCommentRepDto> allByMemoryId = memCommentService.findAllByMemoryId(id);
@@ -58,7 +57,6 @@ public class MemoryStarService {
     public MemoryStarRepDto getStarById(Long id) {
         MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(id);
         Long userId = UserUtil.getCurrentUserId();
-        boolean ifLiked = memoryStarDao.findIfLiked(id, userId);
         MemoryStarRepDto dto = mapper.toDto(memoryStar);
         //dto.setIsLiked(ifLiked);
         return dto;
@@ -111,24 +109,4 @@ public class MemoryStarService {
         List<MemoryStar> allMyMemoryStar = memoryStarDao.getAllMyMemoryStar(userId);
         return mapper.toSimpleRepDtoList(allMyMemoryStar);
     }
-
-//    public MemoryStarLikeDto createLike(Long id) {
-//        Long userId = UserUtil.getCurrentUserId();
-//        MemoryStar memoryStar = memoryStarDao.pressLike(id, userId);
-//        return MemoryStarLikeDto.builder()
-//                .memoryId(memoryStar.getMemory_id())
-//                .isLiked(true)
-//                .likes(memoryStar.getLikes())
-//                .build();
-//    }
-//
-//    public MemoryStarLikeDto deleteLike(Long id) {
-//        Long userId = UserUtil.getCurrentUserId();
-//        MemoryStar memoryStar = memoryStarDao.deleteLike(id, userId);
-//        return MemoryStarLikeDto.builder()
-//                .memoryId(memoryStar.getMemory_id())
-//                .isLiked(false)
-//                .likes(memoryStar.getLikes())
-//                .build();
-//    }
 }
