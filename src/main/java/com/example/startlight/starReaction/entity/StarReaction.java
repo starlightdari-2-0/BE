@@ -5,6 +5,7 @@ import com.example.startlight.memoryStar.entity.MemoryStar;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
@@ -18,6 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Getter
 public class StarReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
