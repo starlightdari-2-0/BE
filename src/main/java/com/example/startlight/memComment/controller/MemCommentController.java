@@ -28,13 +28,13 @@ public class MemCommentController {
         MemCommentRepDto memCommentRepDto = memCommentService.saveMemComment(memCommentReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
     }
-//
-//    @PutMapping("/comment")
-//    public ResponseEntity<MemCommentRepDto> updateMemComment(@RequestBody MemCommentUpdateReqDto memCommentReqDto) {
-//        MemCommentRepDto memCommentRepDto = memCommentService.updateMemComment(memCommentReqDto);
-//        return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
-//    }
-//
+
+    @PutMapping("/comment")
+    public ResponseEntity<MemCommentRepDto> updateMemComment(@RequestBody MemCommentUpdateReqDto memCommentReqDto) {
+        MemCommentRepDto memCommentRepDto = memCommentService.updateMemComment(memCommentReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
+    }
+
 //    @DeleteMapping("/comment/{commentId}")
 //    public ResponseEntity<String> deleteMemComment(@PathVariable Long commentId) {
 //        memCommentService.deleteMemComment(commentId);
