@@ -3,8 +3,10 @@ package com.example.startlight.memComment.controller;
 import com.example.startlight.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memComment.dto.MemCommentReqDto;
 import com.example.startlight.memComment.dto.MemCommentUpdateReqDto;
+import com.example.startlight.memComment.dto.PageResponse;
 import com.example.startlight.memComment.service.MemCommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,8 +20,10 @@ public class MemCommentController {
     private final MemCommentService memCommentService;
 
     @GetMapping("/{memoryId}/comments")
-    public ResponseEntity<List<MemCommentRepDto>> getMemComment(@PathVariable("memoryId") Long memoryId) {
-        List<MemCommentRepDto> allByMemoryId = memCommentService.findAllByMemoryId(memoryId);
+    public ResponseEntity<PageResponse<MemCommentRepDto>> getMemComment(
+            @PathVariable("memoryId") Long memoryId,
+            @RequestParam(defaultValue = "0") int page) {
+        PageResponse<MemCommentRepDto> allByMemoryId = memCommentService.findParentCommentByMemoryId(memoryId, page);
         return ResponseEntity.status(HttpStatus.OK).body(allByMemoryId);
     }
 

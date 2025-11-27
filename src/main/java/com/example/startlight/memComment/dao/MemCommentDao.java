@@ -7,6 +7,9 @@ import com.example.startlight.memoryStar.entity.MemoryStar;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -51,8 +54,9 @@ public class MemCommentDao {
         memComment.getMemoryStar().deleteComment();
     }
 
-    public List<MemComment> findParentCommentByMemoryId(Long memoryId) {
-        return memCommentRepository.findParentCommentByMemoryId(memoryId);
+    public Page<MemComment> findParentCommentByMemoryId(Long memoryId, int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return memCommentRepository.findParentCommentByMemoryId(memoryId, pageable);
     }
 
     public List<MemComment> findAllByMemoryId(Long memory_id) {

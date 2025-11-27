@@ -11,6 +11,6 @@ public class MemCommentRepDto {
     private Long comment_id;
     private Long memory_id;
     private String content;
-    private Long writer_id;
     private String writer_name;
+    private boolean isMine;
 }
