@@ -71,7 +71,11 @@ public class MemCommentDao {
         else throw new EntityNotFoundException();
     }
 
-    public List<MemComment> findChildernCommentByCommentId(Long comment_id) {
+    public List<MemComment> findChildrenCommentByCommentId(Long comment_id) {
         return memCommentRepository.findChildrenCommentByCommentId(comment_id);
+    }
+
+    public Long countChildrenComment(Long comment_id) {
+        return memCommentRepository.countChildrenComment(comment_id);
     }
 }

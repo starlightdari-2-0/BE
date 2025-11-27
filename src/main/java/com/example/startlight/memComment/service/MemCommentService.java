@@ -69,6 +69,8 @@ public class MemCommentService {
                 .peek(dto -> {
                     boolean mine = checkIfMine(dto.getComment_id());
                     dto.setMine(mine);
+                    Long count = memCommentDao.countChildrenComment(dto.getComment_id());
+                    dto.setReply_count(count);
                 })
                 .toList();
 
@@ -97,7 +99,7 @@ public class MemCommentService {
     }
 
     public List<MemCommentRepDto> findChildrenCommentByCommentId(Long comment_id) {
-        List<MemComment> comments = memCommentDao.findChildernCommentByCommentId(comment_id);
+        List<MemComment> comments = memCommentDao.findChildrenCommentByCommentId(comment_id);
         List<MemCommentRepDto> commentRepDtos = comments.stream().map(mapper::toDto).toList();
         for (MemCommentRepDto commentRepDto : commentRepDtos) {
             commentRepDto.setMine(checkIfMine(commentRepDto.getComment_id()));

@@ -31,4 +31,7 @@ public interface MemCommentRepository extends JpaRepository<MemComment, Long> {
 
     @Query("select mc from MemComment mc where mc.parent.comment_id = :commentId")
     List<MemComment> findChildrenCommentByCommentId(@Param("commentId") Long commentId);
+
+    @Query("select count(mc) from MemComment mc where mc.parent.comment_id = :commentId")
+    Long countChildrenComment(@Param("commentId") Long commentId);
 }
