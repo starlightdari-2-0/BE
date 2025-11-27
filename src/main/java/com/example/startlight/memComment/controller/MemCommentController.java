@@ -15,7 +15,7 @@ import java.util.List;
 @RequestMapping("/memory-stars")
 @RequiredArgsConstructor
 public class MemCommentController {
-//    private final MemCommentService memCommentService;
+    private final MemCommentService memCommentService;
 //
 //    @GetMapping("/{memoryId}/comment")
 //    public ResponseEntity<List<MemCommentRepDto>> getMemComment(@PathVariable("memoryId") Long memoryId) {
@@ -23,11 +23,11 @@ public class MemCommentController {
 //        return ResponseEntity.status(HttpStatus.OK).body(allByMemoryId);
 //    }
 //
-//    @PostMapping("/comment")
-//    public ResponseEntity<MemCommentRepDto> createMemComment(@RequestBody MemCommentReqDto memCommentReqDto) {
-//        MemCommentRepDto memCommentRepDto = memCommentService.saveMemComment(memCommentReqDto);
-//        return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
-//    }
+    @PostMapping("/comment")
+    public ResponseEntity<MemCommentRepDto> createMemComment(@RequestBody MemCommentReqDto memCommentReqDto) {
+        MemCommentRepDto memCommentRepDto = memCommentService.saveMemComment(memCommentReqDto);
+        return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
+    }
 //
 //    @PutMapping("/comment")
 //    public ResponseEntity<MemCommentRepDto> updateMemComment(@RequestBody MemCommentUpdateReqDto memCommentReqDto) {
