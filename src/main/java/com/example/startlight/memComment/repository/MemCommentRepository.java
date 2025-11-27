@@ -28,4 +28,7 @@ public interface MemCommentRepository extends JpaRepository<MemComment, Long> {
             @Param("memoryId") Long memoryId,
             Pageable pageable
     );
+
+    @Query("select mc from MemComment mc where mc.parent.comment_id = :commentId")
+    List<MemComment> findChildrenCommentByCommentId(@Param("commentId") Long commentId);
 }

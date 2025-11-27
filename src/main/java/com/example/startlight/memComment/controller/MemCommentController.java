@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/memory-stars")
 @RequiredArgsConstructor
 public class MemCommentController {
     private final MemCommentService memCommentService;
 
-    @GetMapping("/{memoryId}/comments")
+    @GetMapping("/memory-stars/{memoryId}/comments")
     public ResponseEntity<PageResponse<MemCommentRepDto>> getMemComment(
             @PathVariable("memoryId") Long memoryId,
             @RequestParam(defaultValue = "0") int page) {
@@ -27,19 +26,26 @@ public class MemCommentController {
         return ResponseEntity.status(HttpStatus.OK).body(allByMemoryId);
     }
 
-    @PostMapping("/comment")
+    @GetMapping("/memory-comments/{commentId}/replies")
+    public ResponseEntity<List<MemCommentRepDto>> getMemCommentChildren(
+            @PathVariable("commentId") Long commentId) {
+        List<MemCommentRepDto> comments = memCommentService.findChildrenCommentByCommentId(commentId);
+        return ResponseEntity.status(HttpStatus.OK).body(comments);
+    }
+
+    @PostMapping("/memory-comments")
     public ResponseEntity<MemCommentRepDto> createMemComment(@RequestBody MemCommentReqDto memCommentReqDto) {
         MemCommentRepDto memCommentRepDto = memCommentService.saveMemComment(memCommentReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
     }
 
-    @PutMapping("/comment")
+    @PutMapping("/memory-comments")
     public ResponseEntity<MemCommentRepDto> updateMemComment(@RequestBody MemCommentUpdateReqDto memCommentReqDto) {
         MemCommentRepDto memCommentRepDto = memCommentService.updateMemComment(memCommentReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
     }
 
-    @DeleteMapping("/comment/{commentId}")
+    @DeleteMapping("/memory-comments/{commentId}")
     public ResponseEntity<String> deleteMemComment(@PathVariable Long commentId) {
         memCommentService.deleteMemComment(commentId);
         return ResponseEntity.status(HttpStatus.OK).body("success delete comment id : " + commentId);

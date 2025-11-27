@@ -95,4 +95,13 @@ public class MemCommentService {
         MemComment memComment = memCommentDao.findById(comment_id);
         return userId.equals(memComment.getWriter_id());
     }
+
+    public List<MemCommentRepDto> findChildrenCommentByCommentId(Long comment_id) {
+        List<MemComment> comments = memCommentDao.findChildernCommentByCommentId(comment_id);
+        List<MemCommentRepDto> commentRepDtos = comments.stream().map(mapper::toDto).toList();
+        for (MemCommentRepDto commentRepDto : commentRepDtos) {
+            commentRepDto.setMine(checkIfMine(commentRepDto.getComment_id()));
+        }
+        return commentRepDtos;
+    }
 }

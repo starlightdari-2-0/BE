@@ -70,4 +70,8 @@ public class MemCommentDao {
         }
         else throw new EntityNotFoundException();
     }
+
+    public List<MemComment> findChildernCommentByCommentId(Long comment_id) {
+        return memCommentRepository.findChildrenCommentByCommentId(comment_id);
+    }
 }
