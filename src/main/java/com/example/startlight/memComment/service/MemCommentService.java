@@ -60,6 +60,11 @@ public class MemCommentService {
         memCommentDao.delete(userId, comment_id);
     }
 
+    public List<MemCommentRepDto> findParentCommentByMemoryId(Long memory_id) {
+        List<MemComment> memCommentList = memCommentDao.findParentCommentByMemoryId(memory_id);
+        return memCommentList.stream().map(mapper::toDto).collect(Collectors.toList());
+    }
+
     public List<MemCommentRepDto> findAllByMemoryId(Long memory_id) {
         List<MemComment> allByMemoryId = memCommentDao.findAllByMemoryId(memory_id);
         return allByMemoryId.stream().map(mapper::toDto).collect(Collectors.toList());

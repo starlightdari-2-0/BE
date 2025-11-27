@@ -51,6 +51,10 @@ public class MemCommentDao {
         memComment.getMemoryStar().deleteComment();
     }
 
+    public List<MemComment> findParentCommentByMemoryId(Long memoryId) {
+        return memCommentRepository.findParentCommentByMemoryId(memoryId);
+    }
+
     public List<MemComment> findAllByMemoryId(Long memory_id) {
         return memCommentRepository.findAllByMemoryIdDesc(memory_id);
     }

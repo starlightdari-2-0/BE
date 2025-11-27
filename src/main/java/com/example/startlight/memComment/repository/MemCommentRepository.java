@@ -11,4 +11,9 @@ public interface MemCommentRepository extends JpaRepository<MemComment, Long> {
 
     @Query("SELECT mc from MemComment mc where mc.memoryStar.memory_id = :memoryId ORDER BY mc.comment_id DESC")
     List<MemComment> findAllByMemoryIdDesc(@Param("memoryId") Long memory_id);
+
+    @Query("select mc " +
+            "from MemComment mc " +
+            "where mc.memoryStar.memory_id = :memoryId and mc.parent.comment_id = null")
+    List<MemComment> findParentCommentByMemoryId(Long memoryId);
 }
