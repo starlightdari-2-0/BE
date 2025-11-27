@@ -43,7 +43,6 @@ public class MemCommentDao {
         MemComment memComment = memCommentRepository.findById(comment_id)
                 .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. ID: " + comment_id));
 
-        // ✅ 현재 사용자가 댓글 작성자인지 확인
         if (!memComment.getWriter_id().equals(user_id)) {
             throw new UnauthorizedAccessException("자신이 작성한 댓글만 삭제할 수 있습니다.");
         }

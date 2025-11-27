@@ -28,13 +28,22 @@ public class MemCommentService {
     public MemCommentRepDto saveMemComment(MemCommentReqDto memCommentReqDto) {
         Long userId = UserUtil.getCurrentUserId();
         String stNickname = memberDao.selectMember(userId).getSt_nickname();
-
         MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(memCommentReqDto.getMemory_id());
+        MemComment parentComment = null;
+        if (memCommentReqDto.getParent_id() != null) {
+            // 대댓글
+            parentComment = memCommentDao.findById(memCommentReqDto.getParent_id());
+            if (!parentComment.getMemoryStar().getMemory_id().equals(memoryStar.getMemory_id())) {
+                // 부모 댓글과 자식 댓글의 MemoryId가 같지 않으면
+                throw new IllegalArgumentException("부모 댓글이 다른 MemoryStar에 속해 있습니다.");
+            }
+        }
         MemComment memComment = MemComment.builder()
                 .content(memCommentReqDto.getContent())
                 .writer_id(userId)
                 .writer_name(stNickname)
                 .memoryStar(memoryStar)
+                .parent(parentComment)
                 .build();
         MemComment memComment1 = memCommentDao.create(memComment);
         return mapper.toDto(memComment1);
