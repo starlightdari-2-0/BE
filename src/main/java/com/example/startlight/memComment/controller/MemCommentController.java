@@ -59,4 +59,10 @@ public class MemCommentController {
         likesService.createLike(commentId);
         return ResponseEntity.status(HttpStatus.OK).body("success like comment id : " + commentId);
     }
+
+    @DeleteMapping("/memory-comments/{commentId}/like")
+    public ResponseEntity<String> unLikeMemComment(@PathVariable Long commentId) {
+        likesService.deleteLike(commentId);
+        return ResponseEntity.status(HttpStatus.OK).body("success unlike comment id : " + commentId);
+    }
 }

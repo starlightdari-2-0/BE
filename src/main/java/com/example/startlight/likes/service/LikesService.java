@@ -15,4 +15,10 @@ public class LikesService {
         likesDao.createReplyLike(userId, commentId);
         return true;
     }
+
+    public boolean deleteLike(Long commentId) {
+        Long userId = UserUtil.getCurrentUserId();
+        likesDao.deleteReplyLike(userId, commentId);
+        return true;
+    }
 }
