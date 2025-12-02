@@ -46,6 +46,7 @@ public class SecurityConfig {
                                 "/api/star/**",
                                 "/api/memory-stars/{memoryId}/comments",
                                 "/api/memory-stars/public",
+                                "/api/memory-comments/{commentId}/like",
                                 "/api/star/getList",
                                 "/api/uploads/**",
                                 "/api/post/**",

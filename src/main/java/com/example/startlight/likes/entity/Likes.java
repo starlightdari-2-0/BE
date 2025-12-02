@@ -1,10 +1,14 @@
 package com.example.startlight.likes.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "likes")
 public class Likes {
     @Id

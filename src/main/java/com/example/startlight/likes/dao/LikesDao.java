@@ -1,6 +1,7 @@
 package com.example.startlight.likes.dao;
 
 import com.example.startlight.likes.entity.Likes;
+import com.example.startlight.likes.entity.TargetType;
 import com.example.startlight.likes.repository.LikesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,11 +15,11 @@ public class LikesDao {
        return likesRepository.save(likes);
    }
 
-   public Likes createReplyLike(Long targetId, Long userId) {
-       Likes likes = new Likes();
-       likes.setTarget_type("reply");
-       likes.setTarget_id(targetId);
-       likes.setMember_id(userId);
+   public Likes createReplyLike(Long userId, Long commentId) {
+       Likes likes = Likes.builder()
+               .target_type(TargetType.MEMORY_COMMENT_LIKE)
+               .target_id(commentId)
+               .member_id(userId).build();
        return likesRepository.save(likes);
    }
 

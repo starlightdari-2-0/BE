@@ -1,5 +1,6 @@
 package com.example.startlight.memComment.controller;
 
+import com.example.startlight.likes.service.LikesService;
 import com.example.startlight.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memComment.dto.MemCommentReqDto;
 import com.example.startlight.memComment.dto.MemCommentUpdateReqDto;
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemCommentController {
     private final MemCommentService memCommentService;
+    private final LikesService likesService;
 
     @GetMapping("/memory-stars/{memoryId}/comments")
     public ResponseEntity<PageResponse<MemCommentRepDto>> getMemComment(
@@ -49,5 +51,12 @@ public class MemCommentController {
     public ResponseEntity<String> deleteMemComment(@PathVariable Long commentId) {
         memCommentService.deleteMemComment(commentId);
         return ResponseEntity.status(HttpStatus.OK).body("success delete comment id : " + commentId);
+    }
+
+    // 좋아요
+    @PostMapping("/memory-comments/{commentId}/like")
+    public ResponseEntity<String> likeMemComment(@PathVariable Long commentId) {
+        likesService.createLike(commentId);
+        return ResponseEntity.status(HttpStatus.OK).body("success like comment id : " + commentId);
     }
 }
