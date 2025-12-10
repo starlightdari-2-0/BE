@@ -14,4 +14,5 @@ public class MemCommentRepDto {
     private String writer_name;
     private boolean isMine;
     private Long reply_count;
+    private Long like_count;
 }

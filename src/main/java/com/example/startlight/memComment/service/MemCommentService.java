@@ -1,6 +1,8 @@
 package com.example.startlight.memComment.service;
 
 import com.example.startlight.kakao.util.UserUtil;
+import com.example.startlight.likes.dao.LikesDao;
+import com.example.startlight.likes.service.LikesService;
 import com.example.startlight.memComment.dao.MemCommentDao;
 import com.example.startlight.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memComment.dto.MemCommentReqDto;
@@ -26,6 +28,7 @@ public class MemCommentService {
     private final MemCommentMapper mapper = MemCommentMapper.INSTANCE;
     private final MemoryStarDao memoryStarDao;
     private final MemberDao memberDao;
+    private final LikesService likesService;
 
     public MemCommentRepDto saveMemComment(MemCommentReqDto memCommentReqDto) {
         Long userId = UserUtil.getCurrentUserId();
@@ -69,8 +72,10 @@ public class MemCommentService {
                 .peek(dto -> {
                     boolean mine = checkIfMine(dto.getComment_id());
                     dto.setMine(mine);
-                    Long count = memCommentDao.countChildrenComment(dto.getComment_id());
-                    dto.setReply_count(count);
+                    Long replyCount = memCommentDao.countChildrenComment(dto.getComment_id());
+                    dto.setReply_count(replyCount);
+                    Long likeCount = likesService.getLikeCount(dto.getComment_id());
+                    dto.setLike_count(likeCount);
                 })
                 .toList();
 
@@ -103,6 +108,8 @@ public class MemCommentService {
         List<MemCommentRepDto> commentRepDtos = comments.stream().map(mapper::toDto).toList();
         for (MemCommentRepDto commentRepDto : commentRepDtos) {
             commentRepDto.setMine(checkIfMine(commentRepDto.getComment_id()));
+            Long likeCount = likesService.getLikeCount(commentRepDto.getComment_id());
+            commentRepDto.setLike_count(likeCount);
         }
         return commentRepDtos;
     }
