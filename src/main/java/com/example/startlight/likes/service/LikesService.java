@@ -2,6 +2,7 @@ package com.example.startlight.likes.service;
 
 import com.example.startlight.kakao.util.UserUtil;
 import com.example.startlight.likes.dao.LikesDao;
+import com.example.startlight.likes.entity.Likes;
 import com.example.startlight.likes.repository.LikesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,16 @@ public class LikesService {
 
     public Long getLikeCount(Long commentId) {
         return likesRepository.findLikesCountByTarget_id(commentId);
+    }
+
+    public boolean findIfILiked(Long commentId) {
+        Long userId = UserUtil.getCurrentUserId();
+        Likes likes = likesRepository.findLikesByMember_idAndTarget_id(userId, commentId);
+        if (likes != null) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

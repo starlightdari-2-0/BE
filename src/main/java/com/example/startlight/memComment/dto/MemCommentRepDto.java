@@ -15,4 +15,5 @@ public class MemCommentRepDto {
     private boolean isMine;
     private Long reply_count;
     private Long like_count;
+    private boolean isLike;
 }

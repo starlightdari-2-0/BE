@@ -76,6 +76,8 @@ public class MemCommentService {
                     dto.setReply_count(replyCount);
                     Long likeCount = likesService.getLikeCount(dto.getComment_id());
                     dto.setLike_count(likeCount);
+                    boolean isLiked = likesService.findIfILiked(dto.getComment_id());
+                    dto.setLike(isLiked);
                 })
                 .toList();
 
@@ -110,6 +112,8 @@ public class MemCommentService {
             commentRepDto.setMine(checkIfMine(commentRepDto.getComment_id()));
             Long likeCount = likesService.getLikeCount(commentRepDto.getComment_id());
             commentRepDto.setLike_count(likeCount);
+            boolean ifILiked = likesService.findIfILiked(commentRepDto.getComment_id());
+            commentRepDto.setLike(ifILiked);
         }
         return commentRepDtos;
     }
