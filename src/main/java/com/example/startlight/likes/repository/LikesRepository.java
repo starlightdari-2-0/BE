@@ -8,4 +8,7 @@ public interface LikesRepository extends JpaRepository<Likes, Long> {
 
     @Query("select L from Likes L where L.member_id = :user_id and L.target_id = :target_id")
     public Likes findLikesByMember_idAndTarget_id(Long user_id, Long target_id);
+
+    @Query("select count(L) from Likes L where L.target_id = :target_id")
+    public Long findLikesCountByTarget_id(Long target_id);
 }

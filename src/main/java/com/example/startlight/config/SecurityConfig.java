@@ -44,7 +44,6 @@ public class SecurityConfig {
                                 "/api/auth/**",
                                 "/api/health", "/api/status",
                                 "/api/star/**",
-                                "/api/memory-stars/{memoryId}/comments",
                                 "/api/memory-stars/public",
                                 "/api/star/getList",
                                 "/api/uploads/**",
@@ -57,7 +56,11 @@ public class SecurityConfig {
                                 "/api/constellation/each/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/pets/**").authenticated()
+                        .requestMatchers("/api/pets/**",
+                                "/api/memory-stars/{memoryId}/comments",
+                                "/api/memory-comments/{commentId}/like"
+
+                        ).authenticated()
 
                         .anyRequest().permitAll()
                 )

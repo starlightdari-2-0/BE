@@ -7,6 +7,9 @@ import com.example.startlight.memoryStar.entity.MemoryStar;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -43,13 +46,17 @@ public class MemCommentDao {
         MemComment memComment = memCommentRepository.findById(comment_id)
                 .orElseThrow(() -> new EntityNotFoundException("댓글을 찾을 수 없습니다. ID: " + comment_id));
 
-        // ✅ 현재 사용자가 댓글 작성자인지 확인
         if (!memComment.getWriter_id().equals(user_id)) {
             throw new UnauthorizedAccessException("자신이 작성한 댓글만 삭제할 수 있습니다.");
         }
 
         memCommentRepository.deleteById(comment_id);
         memComment.getMemoryStar().deleteComment();
+    }
+
+    public Page<MemComment> findParentCommentByMemoryId(Long memoryId, int page) {
+        Pageable pageable = PageRequest.of(page, 5);
+        return memCommentRepository.findParentCommentByMemoryId(memoryId, pageable);
     }
 
     public List<MemComment> findAllByMemoryId(Long memory_id) {
@@ -62,5 +69,13 @@ public class MemCommentDao {
             return byId.get();
         }
         else throw new EntityNotFoundException();
+    }
+
+    public List<MemComment> findChildrenCommentByCommentId(Long comment_id) {
+        return memCommentRepository.findChildrenCommentByCommentId(comment_id);
+    }
+
+    public Long countChildrenComment(Long comment_id) {
+        return memCommentRepository.countChildrenComment(comment_id);
     }
 }
