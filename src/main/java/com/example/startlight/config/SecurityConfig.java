@@ -56,8 +56,11 @@ public class SecurityConfig {
                                 "/api/constellation/each/**"
                         ).permitAll()
 
-                        .requestMatchers("/api/pets/**",
-                                "/api/memory-stars/{memoryId}/comments",
+                        .requestMatchers(
+                                "/api/member/**",
+                                "/api/pets/**",
+                                "/api/memory-stars/{memoryId}/**",
+                                "/api/memory-comments/**",
                                 "/api/memory-comments/{commentId}/like"
 
                         ).authenticated()
