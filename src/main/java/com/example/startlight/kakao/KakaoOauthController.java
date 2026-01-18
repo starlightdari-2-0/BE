@@ -81,6 +81,7 @@ public class KakaoOauthController{
                     .email(userInfo.getKakaoAccount().email)
                                     .profileImageUrl(userInfo.getKakaoAccount().profile.getProfileImageUrl()).build();
 
+            boolean isFirstLogin = !memberService.isFirstKakaoLogin(userInfo.getId());
             memberService.loginMember(kakaoUserCreateDto);
 
             Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
@@ -90,7 +91,9 @@ public class KakaoOauthController{
                 Long id =  (Long) principal.get("id");
                 log.info("Kakao User ID: {}", id);
             }
-            String redirectUri = kakaoService.getMyPageUrl();
+            String redirectUri = isFirstLogin
+                    ? kakaoService.getOnboardingUrl()
+                    : kakaoService.getMyPageUrl();
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create(redirectUri))
                     .build();

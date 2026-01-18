@@ -23,4 +23,6 @@ public interface MemberService {
     Integer getMemoryNumber();
 
     MemberWithPetDto getMemberWithPet();
+
+    boolean isFirstKakaoLogin(Long id);
 }
