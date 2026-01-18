@@ -4,7 +4,10 @@ import com.example.startlight.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memComment.service.MemCommentService;
 import com.example.startlight.member.service.MemberService;
 import com.example.startlight.memoryStar.dto.*;
+import com.example.startlight.memoryStar.service.MemoryStarLikeService;
+import com.example.startlight.memoryStar.service.MemoryStarQueryService;
 import com.example.startlight.memoryStar.service.MemoryStarService;
+import com.example.startlight.starReaction.entity.ReactionType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,8 +22,8 @@ import java.util.List;
 @RequestMapping("/memory-stars")
 public class MemoryStarController {
     private final MemoryStarService memoryStarService;
-    private final MemberService memberService;
-    private final MemCommentService memCommentService;
+    private final MemoryStarQueryService memoryStarQueryService;
+    private final MemoryStarLikeService memoryStarLikeService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemoryStarRepDto> createMemoryStar(
@@ -30,19 +33,13 @@ public class MemoryStarController {
         return ResponseEntity.status(HttpStatus.OK).body(memoryStar);
     }
 
-//    // 댓글이랑 같이 조회
-//    @GetMapping("/{memoryId}")
-//    public ResponseEntity<MemoryStarRepWithComDto> selectMemoryStarWithCom(@PathVariable Long memoryId) {
-//        MemoryStarRepWithComDto memoryStarRepDto = memoryStarService.selectStarById(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body(memoryStarRepDto);
-//    }
-
     //글만 조회
-//    @GetMapping("/{memoryId}/memory")
-//    public ResponseEntity<MemoryStarRepDto> selectMemoryStarByMemId(@PathVariable Long memoryId) {
-//        MemoryStarRepDto starById = memoryStarService.getStarById(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body(starById);
-//    }
+    @GetMapping("/{memoryId}")
+    public ResponseEntity<MemoryStarRepDto> selectMemoryStarByMemId(@PathVariable Long memoryId) {
+        MemoryStarRepDto starById = memoryStarQueryService.getStarById(memoryId);
+        return ResponseEntity.status(HttpStatus.OK).body(starById);
+    }
+
     @PatchMapping("/{memoryId}")
     public ResponseEntity<MemoryStarRepWithComDto> updateMemoryStar(
             @PathVariable Long memoryId,
@@ -77,19 +74,25 @@ public class MemoryStarController {
 //        return ResponseEntity.status(HttpStatus.OK).body(buildDto);
 //    }
 //
-//    //like
-//
-//    @PostMapping("/{memoryId}/likes")
-//    public ResponseEntity<MemoryStarLikeDto> createLikeMemoryStar(@PathVariable Long memoryId) {
-//        MemoryStarLikeDto memoryStarRepDto = memoryStarService.createLike(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body(memoryStarRepDto);
-//    }
-//
-//    @DeleteMapping("/{memoryId}/likes")
-//    public ResponseEntity<MemoryStarLikeDto> deleteLikeMemoryStar(@PathVariable Long memoryId) {
-//        MemoryStarLikeDto memoryStarRepDto = memoryStarService.deleteLike(memoryId);
-//        return ResponseEntity.status(HttpStatus.OK).body(memoryStarRepDto);
-//    }
+    //like
+
+    @PostMapping("/{memoryId}/reactions/{type}")
+    public ResponseEntity<ReactionToggleResponse> createLikeMemoryStar(
+            @PathVariable Long memoryId,
+            @PathVariable ReactionType type) {
+        boolean result = memoryStarLikeService.addReaction(memoryId, type);
+        return ResponseEntity.status(HttpStatus.OK).body(new ReactionToggleResponse(result));
+    }
+
+    @DeleteMapping("/{memoryId}/reactions/{type}")
+    public ResponseEntity<ReactionToggleResponse> deleteLikeMemoryStar(
+            @PathVariable Long memoryId,
+            @PathVariable ReactionType type) {
+        boolean result = memoryStarLikeService.removeReaction(memoryId, type);
+        return ResponseEntity.status(HttpStatus.OK).body(new ReactionToggleResponse(result));
+    }
+
+    public record ReactionToggleResponse(boolean liked) {}
 //
 //    //comments
 //    @GetMapping("/{memoryId}/comments")

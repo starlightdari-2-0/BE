@@ -34,4 +34,6 @@ public class PetReqDto {
     private String nickname;
 
     private String context;
+
+    private Long con_id;
 }

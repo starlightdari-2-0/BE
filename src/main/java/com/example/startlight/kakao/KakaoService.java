@@ -127,7 +127,7 @@ public class KakaoService {
     }
 
     public String getMyPageUrl() {
-        return awsUrl + "/mypage";
+        return "https://starlightdari.site/mypage/myInfo";
     }
 
     public String getOnboardingUrl() {

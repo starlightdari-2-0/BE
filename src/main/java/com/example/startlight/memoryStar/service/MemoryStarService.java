@@ -16,13 +16,20 @@ import com.example.startlight.pet.entity.Pet;
 import com.example.startlight.s3.service.S3Service;
 import com.example.startlight.starList.dao.StarListDao;
 import com.example.startlight.starList.entity.StarList;
+import com.example.startlight.starReaction.entity.ReactionType;
+import com.example.startlight.starReaction.entity.StarReaction;
+import com.example.startlight.starReaction.repository.StarReactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -30,40 +37,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MemoryStarService {
     private final MemoryStarDao memoryStarDao;
-    private final MemoryStarRepository memoryStarRepository;
-    private final StarListDao starListDao;
     private final MemCommentService memCommentService;
     private final MemberService memberService;
     private final MemberDao memberDao;
     private final S3Service s3Service;
     private final MemoryStarMapper mapper = MemoryStarMapper.INSTANCE;
-    private final PetDao petDao;
-
-    public MemoryStarRepWithComDto selectStarById(Long id) {
-        MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(id);
-        Long userId = UserUtil.getCurrentUserId();
-        boolean ifLiked = memoryStarDao.findIfLiked(id, userId);
-        MemoryStarRepDto mapperDto = mapper.toDto(memoryStar);
-
-        List<MemCommentRepDto> allByMemoryId = memCommentService.findAllByMemoryId(id);
-
-        MemoryStarRepWithComDto dto = MemoryStarRepWithComDto.builder()
-                .memoryStarRepDto(mapperDto)
-                .memComments(allByMemoryId).build();
-
-        //dto.getMemoryStarRepDto().setIsLiked(ifLiked);
-        return dto;
-    }
-
-    public MemoryStarRepDto getStarById(Long id) {
-        MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(id);
-        Long userId = UserUtil.getCurrentUserId();
-        boolean ifLiked = memoryStarDao.findIfLiked(id, userId);
-        MemoryStarRepDto dto = mapper.toDto(memoryStar);
-        //dto.setIsLiked(ifLiked);
-        return dto;
-    }
-
+    private final StarReactionRepository starReactionRepository;
 
     public MemoryStarRepDto createMemoryStar(MemoryStarReqDto memoryStarReqDto) throws IOException {
         Long userId = UserUtil.getCurrentUserId();
@@ -111,24 +90,4 @@ public class MemoryStarService {
         List<MemoryStar> allMyMemoryStar = memoryStarDao.getAllMyMemoryStar(userId);
         return mapper.toSimpleRepDtoList(allMyMemoryStar);
     }
-
-//    public MemoryStarLikeDto createLike(Long id) {
-//        Long userId = UserUtil.getCurrentUserId();
-//        MemoryStar memoryStar = memoryStarDao.pressLike(id, userId);
-//        return MemoryStarLikeDto.builder()
-//                .memoryId(memoryStar.getMemory_id())
-//                .isLiked(true)
-//                .likes(memoryStar.getLikes())
-//                .build();
-//    }
-//
-//    public MemoryStarLikeDto deleteLike(Long id) {
-//        Long userId = UserUtil.getCurrentUserId();
-//        MemoryStar memoryStar = memoryStarDao.deleteLike(id, userId);
-//        return MemoryStarLikeDto.builder()
-//                .memoryId(memoryStar.getMemory_id())
-//                .isLiked(false)
-//                .likes(memoryStar.getLikes())
-//                .build();
-//    }
 }

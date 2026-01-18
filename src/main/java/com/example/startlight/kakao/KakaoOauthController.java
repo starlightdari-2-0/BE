@@ -17,13 +17,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.net.URI;
 import java.util.Map;
 
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth/kakao")
+@RequestMapping("/auth/kakao")
 public class KakaoOauthController{
     private final KakaoService kakaoService;
     private final JWTUtils jwtTokenProvider;
@@ -92,7 +94,9 @@ public class KakaoOauthController{
             String redirectUri = isFirstLogin
                     ? kakaoService.getOnboardingUrl()
                     : kakaoService.getMyPageUrl();
-            return ResponseEntity.ok().body(Map.of("redirectUri", redirectUri));
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .location(URI.create(redirectUri))
+                    .build();
 
         } catch (Exception e) {
             log.error("Error during Kakao login", e);
