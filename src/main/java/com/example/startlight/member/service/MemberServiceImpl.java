@@ -113,4 +113,10 @@ public class MemberServiceImpl implements MemberService{
                 .petList(petSimple)
                 .build();
     }
+
+    @Override
+    public boolean isFirstKakaoLogin(Long id) {
+        Optional<Member> optionalMember = memberRepository.findById(id);
+        return optionalMember.isPresent();
+    }
 }

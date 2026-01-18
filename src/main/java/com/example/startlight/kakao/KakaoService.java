@@ -129,4 +129,8 @@ public class KakaoService {
     public String getMyPageUrl() {
         return awsUrl + "/mypage";
     }
+
+    public String getOnboardingUrl() {
+        return awsUrl + "/onboarding";
+    }
 }
