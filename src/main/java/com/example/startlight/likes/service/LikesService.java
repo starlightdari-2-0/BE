@@ -1,6 +1,6 @@
 package com.example.startlight.likes.service;
 
-import com.example.startlight.kakao.util.UserUtil;
+import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.likes.dao.LikesDao;
 import com.example.startlight.likes.entity.Likes;
 import com.example.startlight.likes.repository.LikesRepository;

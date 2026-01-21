@@ -2,7 +2,7 @@ package com.example.startlight.member.entity;
 
 import com.example.startlight.member.dto.MemberDto;
 import com.example.startlight.pet.entity.Pet;
-import com.example.startlight.post.entity.Post;
+import com.example.startlight.community.post.entity.Post;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
