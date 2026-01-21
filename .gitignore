@@ -40,3 +40,5 @@ out/
 application-private.properties
 
 .DS_Store
+
+redis/.env

@@ -1,8 +1,7 @@
 package com.example.startlight.member.service;
 
-import com.example.startlight.kakao.dto.KakaoUserCreateDto;
+import com.example.startlight.infra.kakao.dto.KakaoUserCreateDto;
 import com.example.startlight.member.dto.MemberDto;
-import com.example.startlight.member.dto.MemberNickNameRepDto;
 import com.example.startlight.member.dto.MemberWithPetDto;
 
 public interface MemberService {

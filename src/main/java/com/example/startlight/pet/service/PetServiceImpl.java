@@ -1,20 +1,15 @@
 package com.example.startlight.pet.service;
 
 import com.amazonaws.services.kms.model.NotFoundException;
-import com.example.startlight.constellation.dto.ConstellationWithStarRepDto;
 import com.example.startlight.constellation.entity.AnimalType;
 import com.example.startlight.constellation.repository.AnimalTypeRepository;
-import com.example.startlight.constellation.service.ConstellationService;
-import com.example.startlight.kakao.util.UserUtil;
+import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.member.repository.MemberRepository;
 import com.example.startlight.pet.dao.PetDao;
 import com.example.startlight.pet.dto.*;
-import com.example.startlight.pet.entity.Edge;
 import com.example.startlight.pet.entity.Pet;
-import com.example.startlight.s3.service.S3Service;
-import com.example.startlight.starList.dto.StarListRepDto;
-import com.example.startlight.starList.service.StarListService;
+import com.example.startlight.infra.s3.service.S3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

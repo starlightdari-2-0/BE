@@ -1,10 +1,9 @@
 package com.example.startlight.pet.dao;
 
 import com.example.startlight.pet.dto.PetReqDto;
-import com.example.startlight.pet.entity.Edge;
 import com.example.startlight.pet.entity.Pet;
 import com.example.startlight.pet.repository.PetRepository;
-import com.example.startlight.s3.service.S3Service;
+import com.example.startlight.infra.s3.service.S3Service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

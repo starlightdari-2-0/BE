@@ -1,10 +1,9 @@
 package com.example.startlight.member.service;
 
-import com.example.startlight.kakao.dto.KakaoUserCreateDto;
-import com.example.startlight.kakao.util.UserUtil;
+import com.example.startlight.infra.kakao.dto.KakaoUserCreateDto;
+import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.member.dao.MemberDao;
 import com.example.startlight.member.dto.MemberDto;
-import com.example.startlight.member.dto.MemberNickNameRepDto;
 import com.example.startlight.member.dto.MemberWithPetDto;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.member.repository.MemberRepository;
