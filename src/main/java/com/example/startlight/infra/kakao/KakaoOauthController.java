@@ -49,12 +49,14 @@ public class KakaoOauthController{
             log.info("Kakao User Info: {}", userInfo);
 
             // 3. JWT 생성
-            boolean rememberMe = false; // 예: 클라이언트 요청에 따라 결정
-            String jwtToken = jwtTokenProvider.createToken(userInfo, accessToken, rememberMe);
-            System.out.println(jwtToken);
+            boolean rememberMe = "true".equals(request.getParameter("rememberMe"));
+            JWTUtils.TokenDto tokens = jwtTokenProvider.createTokens(userInfo, accessToken, rememberMe);
 
-            // 5. 인증 객체 확인 (로그 추가)
-            Authentication authentication = jwtTokenProvider.verifyAndGetAuthentication(jwtToken);
+            log.info("Generated Access Token: {}", tokens.getAccessToken());
+            log.info("Generated Refresh Token: {}", tokens.getRefreshToken());
+
+            // 4. 인증 객체 확인
+            Authentication authentication = jwtTokenProvider.verifyAndGetAuthentication(tokens.getAccessToken());
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
@@ -62,37 +64,42 @@ public class KakaoOauthController{
             boolean isSecure = request.getScheme().equals("https");
             String sameSiteValue = isSecure ? "None" : "Lax";
 
-            final ResponseCookie cookie = ResponseCookie.from("AUTH-TOKEN", jwtToken)
+            // 5. Access Token을 쿠키에 저장
+            final ResponseCookie accessTokenCookie = ResponseCookie.from("AUTH-TOKEN", tokens.getAccessToken())
                     .httpOnly(true)
-                    .maxAge(7 * 24 * 3600)
+                    .maxAge(60 * 60) // 1시간
                     .path("/")
                     .secure(isSecure)
                     .sameSite(sameSiteValue)
                     .build();
 
-            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            // 6. Refresh Token을 쿠키에 저장
+            final ResponseCookie refreshTokenCookie = ResponseCookie.from("REFRESH-TOKEN", tokens.getRefreshToken())
+                    .httpOnly(true)
+                    .maxAge(rememberMe ? 30 * 24 * 60 * 60 : 14 * 24 * 60 * 60) // 30일 or 14일
+                    .path("/")
+                    .secure(isSecure)
+                    .sameSite(sameSiteValue)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
             response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
 
-            log.info(authentication.getPrincipal().toString());
-
-            KakaoUserCreateDto kakaoUserCreateDto = KakaoUserCreateDto.builder().id(userInfo.getId())
-                            .nickName(userInfo.getKakaoAccount().profile.getNickName())
+            KakaoUserCreateDto kakaoUserCreateDto = KakaoUserCreateDto.builder()
+                    .id(userInfo.getId())
+                    .nickName(userInfo.getKakaoAccount().profile.getNickName())
                     .email(userInfo.getKakaoAccount().email)
-                                    .profileImageUrl(userInfo.getKakaoAccount().profile.getProfileImageUrl()).build();
+                    .profileImageUrl(userInfo.getKakaoAccount().profile.getProfileImageUrl())
+                    .build();
 
             boolean isFirstLogin = !memberService.isFirstKakaoLogin(userInfo.getId());
             memberService.loginMember(kakaoUserCreateDto);
 
-            Authentication authentication1 = SecurityContextHolder.getContext().getAuthentication();
-
-            if (authentication1 != null && authentication1.getPrincipal() instanceof Map) {
-                Map<String, Object> principal = (Map<String, Object>) authentication.getPrincipal();
-                Long id =  (Long) principal.get("id");
-                log.info("Kakao User ID: {}", id);
-            }
             String redirectUri = isFirstLogin
                     ? kakaoService.getOnboardingUrl()
                     : kakaoService.getMyPageUrl();
+
             return ResponseEntity.status(HttpStatus.FOUND)
                     .location(URI.create(redirectUri))
                     .build();
@@ -103,6 +110,84 @@ public class KakaoOauthController{
                     .body("Login failed: " + e.getMessage());
         }
 
+    }
+
+    /**
+     *  Refresh Token으로 Access Token 갱신
+     */
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refreshToken(HttpServletRequest request, HttpServletResponse response) {
+        try {
+            // 1. 쿠키에서 Refresh Token 추출
+            Cookie[] cookies = request.getCookies();
+            String refreshToken = null;
+            String oldAccessToken = null;
+
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if ("REFRESH-TOKEN".equals(cookie.getName())) {
+                        refreshToken = cookie.getValue();
+                    } else if ("AUTH-TOKEN".equals(cookie.getName())) {
+                        oldAccessToken = cookie.getValue();
+                    }
+                }
+            }
+
+            if (refreshToken == null || refreshToken.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Refresh token not found"));
+            }
+
+            // 2. Refresh Token 유효성 검증
+            if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid or expired refresh token"));
+            }
+
+            // 3. 카카오 액세스 토큰 추출 (기존 Access Token에서)
+            String kakaoAccessToken = null;
+            if (oldAccessToken != null) {
+                try {
+                    kakaoAccessToken = jwtTokenProvider.extractKakaoAccessToken(oldAccessToken);
+                } catch (Exception e) {
+                    log.warn("Failed to extract Kakao access token from old JWT", e);
+                }
+            }
+
+            // 카카오 액세스 토큰이 없으면 에러
+            if (kakaoAccessToken == null) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Kakao access token not found"));
+            }
+
+            // 4. 새로운 Access Token 발급
+            String newAccessToken = jwtTokenProvider.refreshAccessToken(refreshToken, kakaoAccessToken);
+            log.info("New Access Token issued via refresh");
+
+            boolean isSecure = request.getScheme().equals("https");
+            String sameSiteValue = isSecure ? "None" : "Lax";
+
+            // 5. 새 Access Token을 쿠키에 설정
+            final ResponseCookie accessTokenCookie = ResponseCookie.from("AUTH-TOKEN", newAccessToken)
+                    .httpOnly(true)
+                    .maxAge(60 * 60) // 1시간
+                    .path("/")
+                    .secure(isSecure)
+                    .sameSite(sameSiteValue)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Token refreshed successfully",
+                    "accessToken", newAccessToken
+            ));
+
+        } catch (RuntimeException e) {
+            log.error("Error during token refresh", e);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Token refresh failed: " + e.getMessage()));
+        }
     }
 
     @PostMapping("/logout")
@@ -133,29 +218,50 @@ public class KakaoOauthController{
 
             log.info("Received JWT Token from Cookie: {}", jwtToken);
 
-            // 2. JWT 검증 및 카카오 액세스 토큰 추출
+            // 2. JWT 검증 및 사용자 ID 추출
+            Authentication authentication = jwtTokenProvider.verifyAndGetAuthentication(jwtToken);
+            Long userId = null;
+            if (authentication != null && authentication.getPrincipal() instanceof Map) {
+                Map<String, Object> principal = (Map<String, Object>) authentication.getPrincipal();
+                userId = (Long) principal.get("id");
+            }
+
+            // 3. 카카오 액세스 토큰 추출 및 카카오 로그아웃
             String kakaoAccessToken = jwtTokenProvider.extractKakaoAccessToken(jwtToken);
-            if (kakaoAccessToken == null || kakaoAccessToken.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid or expired token.");
+            if (kakaoAccessToken != null && !kakaoAccessToken.isEmpty()) {
+                boolean logoutSuccess = kakaoService.logoutFromKakao(kakaoAccessToken);
+                log.info(logoutSuccess ? "Kakao logout successful!" : "Kakao logout failed!");
             }
 
-            // 3. 카카오 로그아웃 요청
-            boolean logoutSuccess = kakaoService.logoutFromKakao(kakaoAccessToken);
-            if (!logoutSuccess) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to logout from Kakao.");
+            // 4. Redis에서 Refresh Token 삭제
+            if (userId != null) {
+                jwtTokenProvider.deleteRefreshToken(userId);
+                log.info("Refresh token deleted from Redis for user: {}", userId);
             }
 
-            // 4. 쿠키 만료 처리 (클라이언트 측 자동 삭제)
-            ResponseCookie expiredCookie = ResponseCookie.from("AUTH-TOKEN", "")
-                    .httpOnly(true)  // 보안 강화를 위해 httpOnly 유지
-                    .maxAge(0)  // 쿠키 만료
+            // 5. Access Token 쿠키 만료
+            ResponseCookie expiredAccessTokenCookie = ResponseCookie.from("AUTH-TOKEN", "")
+                    .httpOnly(true)
+                    .maxAge(0)
                     .path("/")
                     .secure(isSecure)
                     .sameSite(sameSiteValue)
                     .build();
 
-            response.addHeader(HttpHeaders.SET_COOKIE, expiredCookie.toString());
-            log.info(logoutSuccess ? "Logout successful!" : "Logout failed!");
+            // 6. Refresh Token 쿠키 만료
+            ResponseCookie expiredRefreshTokenCookie = ResponseCookie.from("REFRESH-TOKEN", "")
+                    .httpOnly(true)
+                    .maxAge(0)
+                    .path("/")
+                    .secure(isSecure)
+                    .sameSite(sameSiteValue)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, expiredAccessTokenCookie.toString());
+            response.addHeader(HttpHeaders.SET_COOKIE, expiredRefreshTokenCookie.toString());
+
+            // 7. SecurityContext 초기화
+            SecurityContextHolder.clearContext();
 
             return ResponseEntity.ok(Map.of("message", "Logout successful"));
 

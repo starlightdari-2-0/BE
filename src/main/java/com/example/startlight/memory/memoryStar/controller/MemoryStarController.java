@@ -4,7 +4,6 @@ import com.example.startlight.memory.memoryStar.dto.MemoryStarRepDto;
 import com.example.startlight.memory.memoryStar.dto.MemoryStarRepWithComDto;
 import com.example.startlight.memory.memoryStar.dto.MemoryStarReqDto;
 import com.example.startlight.memory.memoryStar.dto.MemoryStarUpdateDto;
-import com.example.startlight.memoryStar.dto.*;
 import com.example.startlight.memory.memoryStar.service.MemoryStarLikeService;
 import com.example.startlight.memory.memoryStar.service.MemoryStarQueryService;
 import com.example.startlight.memory.memoryStar.service.MemoryStarService;
