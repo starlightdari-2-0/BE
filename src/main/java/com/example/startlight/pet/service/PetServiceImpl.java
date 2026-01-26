@@ -84,6 +84,7 @@ public class PetServiceImpl implements PetService{
             PetMyPageRepDto petDto = PetMyPageRepDto.builder()
                     .pet_id(pet.getPet_id())
                     .pet_name(pet.getPet_name())
+                    .pet_img(pet.getPet_img())
                     .star_count(memoryStarCount).build();
             dtoList.add(petDto);
         }
