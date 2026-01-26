@@ -61,8 +61,8 @@ public class SecurityConfig {
                                 "/api/pets/**",
                                 "/api/memory-stars/{memoryId}/**",
                                 "/api/memory-comments/**",
-                                "/api/memory-comments/{commentId}/like"
-
+                                "/api/memory-comments/{commentId}/like",
+                                "/api/activity/post"
                         ).authenticated()
 
                         .anyRequest().permitAll()

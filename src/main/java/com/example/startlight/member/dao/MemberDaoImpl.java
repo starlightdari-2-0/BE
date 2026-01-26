@@ -53,10 +53,4 @@ public class MemberDaoImpl implements MemberDao{
         Member member = selectMember(id);
         return member.getMemory_num();
     }
-
-    @Override
-    public String getMemberName(Long id) {
-        Member member = selectMember(id);
-        return member.getSt_nickname();
-    }
 }

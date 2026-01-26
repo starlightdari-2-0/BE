@@ -113,4 +113,6 @@ public class MemoryStar {
         this.commentNumber--;
     }
 
+    public Integer getLikeCounts() { return this.like1 + this.like2 + this.like3; }
+
 }
