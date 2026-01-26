@@ -28,7 +28,7 @@ public class PetController {
         return ResponseEntity.status(HttpStatus.OK).body(responsePetRepDto);
     }
 
-    @PatchMapping("/{petId}")
+    @PatchMapping(value = "/{petId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<PetRepDto> updatePet(@PathVariable Long petId, @RequestBody PetReqDto petUpdateReqDto) throws IOException {
         PetRepDto responsePetRepDto = petService.updatePet(petId, petUpdateReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(responsePetRepDto);

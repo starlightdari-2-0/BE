@@ -23,4 +23,7 @@ public interface MemoryStarRepository extends JpaRepository<MemoryStar, Long> {
 
     @Query("SELECT m.memory_id FROM MemoryStar m WHERE m.pet_id = :petId AND m.star_node_id = :starNodeId ")
     Long findByPetIdAndStarNodeId(@Param("petId") Long petId, @Param("starNodeId") Long starNodeId);
+
+    @Query("SELECT count(m) FROM MemoryStar m WHERE m.pet_id = :petId")
+    Integer countMemoryStarByPetId(@Param("petId") Long petId);
 }

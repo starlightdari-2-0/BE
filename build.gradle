@@ -66,6 +66,12 @@ dependencies {
 	// redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+	// TDD
+	testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+	testImplementation 'org.mockito:mockito-junit-jupiter:5.11.0'
+	testImplementation 'org.mockito:mockito-inline:5.2.0'
+	testImplementation 'org.assertj:assertj-core:3.25.3'
+
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 }
 
