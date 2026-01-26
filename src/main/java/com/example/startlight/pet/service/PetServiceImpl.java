@@ -6,6 +6,7 @@ import com.example.startlight.constellation.repository.AnimalTypeRepository;
 import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.member.repository.MemberRepository;
+import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
 import com.example.startlight.pet.dao.PetDao;
 import com.example.startlight.pet.dto.*;
 import com.example.startlight.pet.entity.Pet;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,6 +30,7 @@ public class PetServiceImpl implements PetService{
     private final S3Service s3Service;
     private final MemberRepository memberRepository;
     private final AnimalTypeRepository animalTypeRepository;
+    private final MemoryStarRepository memoryStarRepository;
 
     @Override
     @Transactional
@@ -73,9 +76,18 @@ public class PetServiceImpl implements PetService{
     public List<PetMyPageRepDto> getPets() {
         Long userId = UserUtil.getCurrentUserId();
         List<Pet> pets = petDao.selectAllPet(userId);
-        return pets.stream()
-                .map(PetMyPageRepDto::toPetMyPageRepDto)
-                .collect(Collectors.toList());
+        // 별 개수 세기
+        List<PetMyPageRepDto> dtoList = new ArrayList<>();
+
+        for (Pet pet : pets) {
+            Integer memoryStarCount = memoryStarRepository.countMemoryStarByPetId(pet.getPet_id());
+            PetMyPageRepDto petDto = PetMyPageRepDto.builder()
+                    .pet_id(pet.getPet_id())
+                    .pet_name(pet.getPet_name())
+                    .star_count(memoryStarCount).build();
+            dtoList.add(petDto);
+        }
+        return dtoList;
     }
 
     @Override
