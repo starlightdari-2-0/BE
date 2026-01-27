@@ -1,5 +1,6 @@
 package com.example.startlight.member.controller;
 
+import com.example.startlight.member.dto.ActivityCommentDto;
 import com.example.startlight.member.dto.ActivityPostDto;
 import com.example.startlight.member.service.MemberActivityService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,12 @@ public class MemberActivityController {
     public ResponseEntity<List<ActivityPostDto>> getActivityPost() {
         List<ActivityPostDto> postActivities = memberActivityService.getPostActivities();
         return ResponseEntity.ok(postActivities);
+    }
+
+    @GetMapping("/comment")
+    public ResponseEntity<List<ActivityCommentDto>> getActivityComment() {
+        List<ActivityCommentDto> commentActivities = memberActivityService.getCommentActivities();
+        return ResponseEntity.ok(commentActivities);
     }
 
 }

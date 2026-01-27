@@ -5,6 +5,8 @@ import com.example.startlight.community.post.repository.PostRepository;
 import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.member.dto.ActivityCommentDto;
 import com.example.startlight.member.dto.ActivityPostDto;
+import com.example.startlight.memory.memComment.entity.MemComment;
+import com.example.startlight.memory.memComment.repository.MemCommentRepository;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
 import com.example.startlight.pet.repository.PetRepository;
@@ -18,11 +20,13 @@ import java.util.Comparator;
 @RequiredArgsConstructor
 @Service
 public class MemberActivityService {
-    //나의 활동 - 게시글
+
     private final MemoryStarRepository memoryStarRepository;
     private final PostRepository postRepository;
     private final PetRepository petRepository;
+    private final MemCommentRepository memCommentRepository;
 
+    //나의 활동 - 게시글
     public List<ActivityPostDto> getPostActivities() {
         Long userId = UserUtil.getCurrentUserId();
         List<MemoryStar> memoryStarList = memoryStarRepository.findAllByWriterId(userId);
@@ -57,5 +61,30 @@ public class MemberActivityService {
                 ).reversed()
         );
         return activityPostDtos;
+    }
+
+    //나의 활동 - 댓글
+    public List<ActivityCommentDto> getCommentActivities() {
+        Long userId = UserUtil.getCurrentUserId();
+        List<MemComment> memCommentList = memCommentRepository.findAllByMemberId(userId);
+        List<ActivityCommentDto> activityCommentDtos = new ArrayList<>();
+        for (MemComment comment : memCommentList) {
+            Integer replyCount = memCommentRepository.countReplies(comment.getComment_id());
+            ActivityCommentDto dto = new ActivityCommentDto(
+                    comment.getContent(),
+                    comment.getWriter_name(),
+                    comment.getCreatedAt(),
+                    replyCount
+            );
+            activityCommentDtos.add(dto);
+        }
+        // TODO : 커뮤니티 댓글 조회 로직 추가
+        activityCommentDtos.sort(
+                Comparator.comparing(
+                        ActivityCommentDto::updatedAt,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                ).reversed()
+        );
+        return activityCommentDtos;
     }
 }

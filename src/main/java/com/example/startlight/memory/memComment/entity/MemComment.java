@@ -3,6 +3,8 @@ package com.example.startlight.memory.memComment.entity;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -13,6 +15,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 @Table(name="MemComment")
 public class MemComment {
     @Id
@@ -39,6 +42,7 @@ public class MemComment {
     @Column(nullable = false)
     private String writer_name;
 
+    @LastModifiedDate
     private LocalDateTime createdAt;
 
     public void updateContent(String content) {
