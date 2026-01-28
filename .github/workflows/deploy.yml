@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest # 작업이 실행될 환경
+    runs-on: ubuntu-latest
     steps:
       - name: 체크아웃
         uses: actions/checkout@v3
@@ -31,7 +31,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Gradle 빌드 (테스트 제외, 빌드캐시 사용)
-        run: ./gradlew clean build --build-cache -x test
+        run: ./gradlew build --build-cache --parallel -x test
 
       - name: 도커허브 로그인
         uses: docker/login-action@v3
@@ -39,25 +39,15 @@ jobs:
           username: ${{ secrets.DOCKER_USER_NAME }}
           password: ${{ secrets.DOCKER_USER_PW }}
 
-      - name: 메타데이터 태그 생성
-        id: meta
-        uses: docker/metadata-action@v5
-        with:
-          images: ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be
-          tags: |
-            type=raw,value=latest
-            type=raw,value=sha-${{ github.sha }}
-
       - name: Buildx 설정
         uses: docker/setup-buildx-action@v3
 
-      - name: 이미지 빌드 & 푸시 (레이어 캐시)
+      - name: 이미지 빌드 & 푸시
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -70,19 +60,44 @@ jobs:
           key: ${{ secrets.AWS_KEY }}
           envs: GITHUB_SHA
           script: |
-              set -e
-              export BACKEND_IMAGE=${{ secrets.DOCKER_USER_NAME }}/${{ secrets.DOCKER_IMAGE_NAME }}-be:sha-${{ github.sha }}
+            set -e
             
-              echo "이미지 Pull (compose)"
-              docker compose pull backend
+            # 현재 실행 중인 이미지 ID 저장
+            OLD_IMAGE=$(docker compose images -q backend 2>/dev/null || echo "")
+            echo "현재 이미지: $OLD_IMAGE"
             
-              echo "backend 교체 (리빌드/강제재생성 금지)"
-              docker compose up -d backend
-
+            # 새 이미지 Pull
+            echo "📥 새 이미지 다운로드 중..."
+            docker compose pull backend
             
-              echo "상태 확인"
-              docker compose ps
-              docker logs --tail=100 backend || true
+            # 컨테이너 재시작
+            echo "🔄 컨테이너 재시작 중..."
+            docker compose up -d backend
+            
+            # 헬스체크 (5초 대기)
+            echo "⏳ 헬스체크 대기 중..."
+            sleep 5
+            
+            if ! docker compose ps backend | grep -q "Up"; then
+            echo "❌ 배포 실패 - 컨테이너가 실행되지 않음"
+            docker compose logs --tail=50 backend
+            exit 1
+            fi
+            
+            # 이전 이미지 즉시 삭제
+            if [ -n "$OLD_IMAGE" ]; then
+            echo "🗑️  이전 이미지 삭제: $OLD_IMAGE"
+            docker rmi $OLD_IMAGE -f 2>/dev/null || echo "이미 삭제되었거나 삭제 불필요"
+            fi
+            
+            # dangling 이미지 정리 (<none> 태그)
+            echo "🧹 dangling 이미지 정리 중..."
+            docker image prune -f
+            
+            echo "✅ 배포 완료!"
+            echo "📊 현재 상태:"
+            docker compose ps
+            docker images | grep ${{ secrets.DOCKER_IMAGE_NAME }}-be || true
 
       - name: Discord 알림 (배포 성공)
         if: success()
