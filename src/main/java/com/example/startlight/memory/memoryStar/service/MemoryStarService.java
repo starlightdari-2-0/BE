@@ -1,6 +1,7 @@
 package com.example.startlight.memory.memoryStar.service;
 
 import com.example.startlight.infra.kakao.util.UserUtil;
+import com.example.startlight.member.dto.ActivityPostDto;
 import com.example.startlight.member.repository.MemberRepository;
 import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memory.memComment.service.MemCommentService;
@@ -12,7 +13,9 @@ import com.example.startlight.memory.memoryStar.dto.*;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import com.example.startlight.memory.memoryStar.mapper.MemoryStarMapper;
 import com.example.startlight.infra.s3.service.S3Service;
+import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
 import com.example.startlight.memory.starReaction.repository.StarReactionRepository;
+import com.example.startlight.pet.repository.PetRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,10 +34,10 @@ public class MemoryStarService {
     private final MemCommentService memCommentService;
     private final MemberService memberService;
     private final MemberDao memberDao;
+    private final MemoryStarRepository memoryStarRepository;
+    private final PetRepository petRepository;
     private final S3Service s3Service;
     private final MemoryStarMapper mapper = MemoryStarMapper.INSTANCE;
-    private final StarReactionRepository starReactionRepository;
-    private final MemberRepository memberRepository;
 
     public MemoryStarRepDto createMemoryStar(MemoryStarReqDto memoryStarReqDto) throws IOException {
         Long userId = UserUtil.getCurrentUserId();
@@ -72,9 +75,20 @@ public class MemoryStarService {
         s3Service.deleteMemoryImg(memoryId);
     }
 
-    public List<MemoryStarSimpleRepDto> findAllMyMemoryStar() {
-        Long userId = UserUtil.getCurrentUserId();
-        List<MemoryStar> allMyMemoryStar = memoryStarDao.getAllMyMemoryStar(userId);
-        return mapper.toSimpleRepDtoList(allMyMemoryStar);
+    public List<ActivityPostDto> findMyEachPetMemoryStar(Long petId) {
+        List<MemoryStar> memoryStarByPetId = memoryStarRepository.findMemoryStarByPet_id(petId);
+        List<ActivityPostDto> mineRepDtos = new ArrayList<>();
+        for (MemoryStar ms : memoryStarByPetId) {
+            String petName = petRepository.findPetNameById(ms.getPet_id());
+            ActivityPostDto dto = new ActivityPostDto(
+                    ms.getName(),
+                    petName,
+                    ms.getUpdatedAt(),
+                    ms.getTotalLikes(),
+                    ms.getCommentNumber()
+            );
+            mineRepDtos.add(dto);
+        }
+        return mineRepDtos;
     }
 }
