@@ -62,7 +62,7 @@ public class KakaoOauthController{
             // 5. Access Token을 쿠키에 저장
             final ResponseCookie accessTokenCookie = ResponseCookie.from("AUTH-TOKEN", tokens.getAccessToken())
                     .httpOnly(true)
-                    .maxAge(60 * 60) // 1시간
+                    .maxAge(60 * 60 * 24) // TODO: 1시간으로 줄이기
                     .path("/")
                     .secure(isSecure)
                     .sameSite(sameSiteValue)
