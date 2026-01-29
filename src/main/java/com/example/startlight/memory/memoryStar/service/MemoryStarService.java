@@ -1,6 +1,7 @@
 package com.example.startlight.memory.memoryStar.service;
 
 import com.example.startlight.infra.kakao.util.UserUtil;
+import com.example.startlight.member.repository.MemberRepository;
 import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memory.memComment.service.MemCommentService;
 import com.example.startlight.member.dao.MemberDao;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -32,6 +34,7 @@ public class MemoryStarService {
     private final S3Service s3Service;
     private final MemoryStarMapper mapper = MemoryStarMapper.INSTANCE;
     private final StarReactionRepository starReactionRepository;
+    private final MemberRepository memberRepository;
 
     public MemoryStarRepDto createMemoryStar(MemoryStarReqDto memoryStarReqDto) throws IOException {
         Long userId = UserUtil.getCurrentUserId();
@@ -67,11 +70,6 @@ public class MemoryStarService {
         MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(memoryId);
         memoryStarDao.deleteMemoryStarById(userId, memoryStar);
         s3Service.deleteMemoryImg(memoryId);
-    }
-
-    public List<MemoryStarSimpleRepDto> findAllPublicMemoryStar() {
-        List<MemoryStar> allPublicMemoryStar = memoryStarDao.getAllPublicMemoryStar();
-        return mapper.toSimpleRepDtoList(allPublicMemoryStar);
     }
 
     public List<MemoryStarSimpleRepDto> findAllMyMemoryStar() {

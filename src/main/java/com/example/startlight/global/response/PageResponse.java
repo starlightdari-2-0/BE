@@ -1,4 +1,4 @@
-package com.example.startlight.memory.memComment.dto;
+package com.example.startlight.global.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -6,7 +6,7 @@ import com.example.startlight.memory.memComment.dao.MemCommentDao;
 import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memory.memComment.dto.MemCommentReqDto;
 import com.example.startlight.memory.memComment.dto.MemCommentUpdateReqDto;
-import com.example.startlight.memory.memComment.dto.PageResponse;
+import com.example.startlight.global.response.PageResponse;
 import com.example.startlight.memory.memComment.entity.MemComment;
 import com.example.startlight.memory.memComment.mapper.MemCommentMapper;
 import com.example.startlight.member.dao.MemberDao;

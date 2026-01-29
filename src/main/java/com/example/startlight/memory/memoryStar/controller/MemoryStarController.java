@@ -1,20 +1,20 @@
 package com.example.startlight.memory.memoryStar.controller;
 
-import com.example.startlight.memory.memoryStar.dto.MemoryStarRepDto;
-import com.example.startlight.memory.memoryStar.dto.MemoryStarRepWithComDto;
-import com.example.startlight.memory.memoryStar.dto.MemoryStarReqDto;
-import com.example.startlight.memory.memoryStar.dto.MemoryStarUpdateDto;
+import com.example.startlight.global.response.PageResponse;
+import com.example.startlight.memory.memoryStar.dto.*;
 import com.example.startlight.memory.memoryStar.service.MemoryStarLikeService;
 import com.example.startlight.memory.memoryStar.service.MemoryStarQueryService;
 import com.example.startlight.memory.memoryStar.service.MemoryStarService;
 import com.example.startlight.memory.starReaction.entity.ReactionType;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,11 +56,14 @@ public class MemoryStarController {
         return ResponseEntity.status(HttpStatus.OK).body("Success delete memory star id : " + memoryId);
     }
 
-//    @GetMapping("/public")
-//    public ResponseEntity<List<MemoryStarSimpleRepDto>> getAllMemoryStar() {
-//        List<MemoryStarSimpleRepDto> allPublicMemoryStar = memoryStarService.findAllPublicMemoryStar();
-//        return ResponseEntity.status(HttpStatus.OK).body(allPublicMemoryStar);
-//    }
+    @GetMapping("/public")
+    public ResponseEntity<PageResponse<MemoryStarPublicRepDto>> getPublicStars(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        PageResponse<MemoryStarPublicRepDto> stars = memoryStarQueryService.getPublicStars(page, size);
+        return ResponseEntity.ok(stars);
+    }
 //
 //    @GetMapping()
 //    public ResponseEntity<MemoryStarListWithNumDto> getMyMemoryStar() {
