@@ -45,6 +45,7 @@ public class SecurityConfig {
                                 "/api/health", "/api/status",
                                 "/api/star/**",
                                 "/api/memory-stars/public",
+                                "/api/memory-stars/pets/**",
                                 "/api/star/getList",
                                 "/api/uploads/**",
                                 "/api/post/**",
