@@ -1,5 +1,6 @@
 package com.example.startlight.memory.memoryStar.repository;
 
+import com.example.startlight.constellation.entity.AnimalCategory;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +27,14 @@ public interface MemoryStarRepository extends JpaRepository<MemoryStar, Long> {
     @Query("SELECT count(m) FROM MemoryStar m WHERE m.pet_id = :petId")
     Integer countMemoryStarByPetId(@Param("petId") Long petId);
 
-    @Query("select m from MemoryStar m where m.shared = true order by m.updatedAt desc")
-    Page<MemoryStar> findByIsPublicTrueOrderByCreatedAtDesc(Pageable pageable);
+    @Query("""
+        select m
+        from MemoryStar m
+        where m.shared = true
+          and (:category is null or m.pet_id in (
+                select p.pet_id from Pet p where p.animal_category =:category
+          ))
+        order by m.updatedAt desc
+    """)
+    Page<MemoryStar> findByIsPublicTrueOrderByCreatedAtDesc(@Param("category") AnimalCategory category, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.example.startlight.memory.memoryStar.controller;
 
+import com.example.startlight.constellation.entity.AnimalCategory;
 import com.example.startlight.global.response.PageResponse;
 import com.example.startlight.memory.memoryStar.dto.*;
 import com.example.startlight.memory.memoryStar.service.MemoryStarLikeService;
@@ -59,9 +60,10 @@ public class MemoryStarController {
     @GetMapping("/public")
     public ResponseEntity<PageResponse<MemoryStarPublicRepDto>> getPublicStars(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) AnimalCategory category
     ) {
-        PageResponse<MemoryStarPublicRepDto> stars = memoryStarQueryService.getPublicStars(page, size);
+        PageResponse<MemoryStarPublicRepDto> stars = memoryStarQueryService.getPublicStars(page, size, category);
         return ResponseEntity.ok(stars);
     }
 //

@@ -1,5 +1,6 @@
 package com.example.startlight.memory.memoryStar.service;
 
+import com.example.startlight.constellation.entity.AnimalCategory;
 import com.example.startlight.global.response.PageResponse;
 import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.member.repository.MemberRepository;
@@ -16,6 +17,7 @@ import com.example.startlight.memory.starReaction.entity.StarReaction;
 import com.example.startlight.memory.starReaction.repository.StarReactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class MemoryStarQueryService {
 
@@ -57,9 +60,10 @@ public class MemoryStarQueryService {
      * Public 게시물 목록 조회
      */
     @Transactional
-    public PageResponse<MemoryStarPublicRepDto> getPublicStars(int page, int size) {
+    public PageResponse<MemoryStarPublicRepDto> getPublicStars(int page, int size, AnimalCategory category) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<MemoryStar> stars = memoryStarRepository.findByIsPublicTrueOrderByCreatedAtDesc(pageable);
+        log.info("category={}", category);
+        Page<MemoryStar> stars = memoryStarRepository.findByIsPublicTrueOrderByCreatedAtDesc(category, pageable);
 
         Long userId = UserUtil.getCurrentUserId();
 
