@@ -4,7 +4,7 @@ import com.example.startlight.likes.service.LikesService;
 import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memory.memComment.dto.MemCommentReqDto;
 import com.example.startlight.memory.memComment.dto.MemCommentUpdateReqDto;
-import com.example.startlight.memory.memComment.dto.PageResponse;
+import com.example.startlight.global.response.PageResponse;
 import com.example.startlight.memory.memComment.service.MemCommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

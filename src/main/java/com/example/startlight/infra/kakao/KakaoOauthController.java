@@ -42,18 +42,13 @@ public class KakaoOauthController{
         try {
             // 1. Access Token 가져오기
             String accessToken = kakaoService.getAccessTokenFromKakao(code);
-            log.info("accessToken: {}", accessToken);
 
             // 2. 사용자 정보 가져오기
             KakaoUserInfoResponseDto userInfo = kakaoService.getUserInfo(accessToken);
-            log.info("Kakao User Info: {}", userInfo);
 
             // 3. JWT 생성
             boolean rememberMe = "true".equals(request.getParameter("rememberMe"));
             JWTUtils.TokenDto tokens = jwtTokenProvider.createTokens(userInfo, accessToken, rememberMe);
-
-            log.info("Generated Access Token: {}", tokens.getAccessToken());
-            log.info("Generated Refresh Token: {}", tokens.getRefreshToken());
 
             // 4. 인증 객체 확인
             Authentication authentication = jwtTokenProvider.verifyAndGetAuthentication(tokens.getAccessToken());
@@ -73,6 +68,8 @@ public class KakaoOauthController{
                     .sameSite(sameSiteValue)
                     .build();
 
+            System.out.println("AUTH-TOKEN : "+tokens.getAccessToken());
+
             // 6. Refresh Token을 쿠키에 저장
             final ResponseCookie refreshTokenCookie = ResponseCookie.from("REFRESH-TOKEN", tokens.getRefreshToken())
                     .httpOnly(true)
@@ -81,6 +78,8 @@ public class KakaoOauthController{
                     .secure(isSecure)
                     .sameSite(sameSiteValue)
                     .build();
+
+            System.out.println("REFRESH-TOKEN : "+tokens.getRefreshToken());
 
             response.addHeader(HttpHeaders.SET_COOKIE, accessTokenCookie.toString());
             response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());

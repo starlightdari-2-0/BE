@@ -55,10 +55,6 @@ public class MemoryStarDao {
         }
     }
 
-    public List<MemoryStar> getAllPublicMemoryStar() {
-        return memoryStarRepository.findBySharedTrue();
-    }
-
     public List<MemoryStar> getAllMyMemoryStar(Long userId) {
         return memoryStarRepository.findAllByWriterId(userId);
     }
