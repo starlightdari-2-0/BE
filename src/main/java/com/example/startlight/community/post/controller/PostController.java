@@ -23,16 +23,16 @@ public class PostController {
     private final PostCommentService postCommentService;
 
     @PostMapping()
-    public ResponseEntity<PostDetailedRepDto> create(@ModelAttribute PostRequestDto postRequestDto) throws IOException {
-        PostDetailedRepDto post = postService.createPost(postRequestDto);
+    public ResponseEntity<PostResponseDto> create(@ModelAttribute PostRequestDto postRequestDto) throws IOException {
+        PostResponseDto post = postService.createPost(postRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<PostDetailedRepDto> get(@PathVariable Long id) throws IOException {
-        PostDetailedRepDto post = postService.getPost(id);
-        return ResponseEntity.status(HttpStatus.OK).body(post);
-    }
+//    @GetMapping("/{id}")
+//    public ResponseEntity<PostDetailedRepDto> get(@PathVariable Long id) throws IOException {
+//        PostDetailedRepDto post = postService.getPost(id);
+//        return ResponseEntity.status(HttpStatus.OK).body(post);
+//    }
 
     @GetMapping()
     public ResponseEntity<List<PostResponseDto>> getAll(@RequestParam(required = false) String category){
@@ -40,11 +40,11 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
-    @PatchMapping()
-    public ResponseEntity<PostDetailedRepDto> update(@ModelAttribute PostUpdateReqDto postRequestDto) throws IOException {
-        PostDetailedRepDto postDetailedRepDto = postService.updatePost(postRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(postDetailedRepDto);
-    }
+//    @PatchMapping()
+//    public ResponseEntity<PostDetailedRepDto> update(@ModelAttribute PostUpdateReqDto postRequestDto) throws IOException {
+//        PostDetailedRepDto postDetailedRepDto = postService.updatePost(postRequestDto);
+//        return ResponseEntity.status(HttpStatus.OK).body(postDetailedRepDto);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){

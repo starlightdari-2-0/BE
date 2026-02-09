@@ -16,8 +16,5 @@ public class PostRequestDto {
     private Category category;
 
     @Nullable
-    private Long funeral_id;
-
-    @Nullable
     private MultipartFile image;
 }

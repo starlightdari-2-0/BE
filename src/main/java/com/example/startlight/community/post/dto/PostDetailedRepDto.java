@@ -21,7 +21,6 @@ public class PostDetailedRepDto {
     private String title;
     private String content;
     private Category category;
-    private Long report;
 
     @Nullable
     private String img_url;
@@ -33,34 +32,4 @@ public class PostDetailedRepDto {
     private LocalDateTime updatedAt;
 
     private Boolean updated;
-
-    public static PostDetailedRepDto toDto(Post post, FuneralDao funeralDao) {
-        if (post.getFuneral_id() == null) {
-            return PostDetailedRepDto.builder()
-                    .post_id(post.getPost_id())
-                    .writer(post.getMember().getSt_nickname())
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .category(post.getCategory())
-                    .report(post.getReport())
-                    .img_url(post.getImg_url())
-                    .updatedAt(post.getUpdatedAt())
-                    .updated(post.getUpdated())
-                    .build();
-        }
-        else {
-            return PostDetailedRepDto.builder()
-                    .post_id(post.getPost_id())
-                    .writer(post.getMember().getSt_nickname())
-                    .title(post.getTitle())
-                    .content(post.getContent())
-                    .category(post.getCategory())
-                    .report(post.getReport())
-                    .img_url(post.getImg_url())
-                    .funeral(funeralDao.selectById(post.getFuneral_id()))
-                    .updatedAt(post.getUpdatedAt())
-                    .updated(post.getUpdated())
-                    .build();
-        }
-    }
 }

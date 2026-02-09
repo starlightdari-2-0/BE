@@ -26,10 +26,9 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostDao postDao;
     private final MemberDao memberDao;
-    private final FuneralDao funeralDao;
     private final S3Service s3Service;
 
-    public PostDetailedRepDto createPost(PostRequestDto postRequestDto) throws IOException {
+    public PostResponseDto createPost(PostRequestDto postRequestDto) throws IOException {
         Long userId = UserUtil.getCurrentUserId();
         Member member = memberDao.selectMember(userId);
         Post post = Post.toEntity(postRequestDto, member);
@@ -38,13 +37,13 @@ public class PostService {
             String postImgUrl = s3Service.uploadPostImg(postRequestDto.getImage(), createdPost.getPost_id());
             createdPost.setImg_url(postImgUrl);
         }
-        return PostDetailedRepDto.toDto(createdPost, funeralDao);
+        return PostResponseDto.toResponseDto(createdPost);
     }
 
-    public PostDetailedRepDto getPost(Long postId) {
-        Post postById = postDao.findPostById(postId);
-        return PostDetailedRepDto.toDto(postById, funeralDao);
-    }
+//    public PostDetailedRepDto getPost(Long postId) {
+//        Post postById = postDao.findPostById(postId);
+//        return PostDetailedRepDto.toDto(postById, funeralDao);
+//    }
 
     public List<PostResponseDto> getAllPosts(String category) {
         List<Post> allPost = postDao.findAllPost();
@@ -61,15 +60,15 @@ public class PostService {
                 .collect(Collectors.toList());
     }
 
-    public PostDetailedRepDto updatePost(PostUpdateReqDto postRequestDto) throws IOException {
-        Long userId = UserUtil.getCurrentUserId();
-        Post post = postDao.updatePost(userId, postRequestDto);
-        if(postRequestDto.getImage() != null) {
-            s3Service.deletePostImg(postRequestDto.getPostId());
-            s3Service.uploadPostImg(postRequestDto.getImage(), post.getPost_id());
-        }
-        return PostDetailedRepDto.toDto(post, funeralDao);
-    }
+//    public PostDetailedRepDto updatePost(PostUpdateReqDto postRequestDto) throws IOException {
+//        Long userId = UserUtil.getCurrentUserId();
+//        Post post = postDao.updatePost(userId, postRequestDto);
+//        if(postRequestDto.getImage() != null) {
+//            s3Service.deletePostImg(postRequestDto.getPostId());
+//            s3Service.uploadPostImg(postRequestDto.getImage(), post.getPost_id());
+//        }
+//        return PostDetailedRepDto.toDto(post, funeralDao);
+//    }
 
     public void deletePost(Long postId) {
         Long userId = UserUtil.getCurrentUserId();
