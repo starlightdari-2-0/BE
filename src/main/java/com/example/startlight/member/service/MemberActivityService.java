@@ -33,7 +33,7 @@ public class MemberActivityService {
         List<Post> postList = postRepository.findAllByMemberId(userId);
         List<ActivityPostDto> activityPostDtos = new ArrayList<>();
         for (MemoryStar memoryStar : memoryStarList) {
-            String petName = petRepository.findPetNameById(memoryStar.getPet_id());
+            String petName = petRepository.findPetNameById(memoryStar.getPet().getPet_id());
             ActivityPostDto dto = new ActivityPostDto(
                     memoryStar.getName(),
                     petName,

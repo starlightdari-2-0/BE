@@ -77,7 +77,7 @@ public class MemoryStarService {
         List<MemoryStar> memoryStarByPetId = memoryStarRepository.findMemoryStarByPet_id(petId);
         List<ActivityPostDto> mineRepDtos = new ArrayList<>();
         for (MemoryStar ms : memoryStarByPetId) {
-            String petName = petRepository.findPetNameById(ms.getPet_id());
+            String petName = petRepository.findPetNameById(ms.getPet().getPet_id());
             ActivityPostDto dto = new ActivityPostDto(
                     ms.getName(),
                     petName,
