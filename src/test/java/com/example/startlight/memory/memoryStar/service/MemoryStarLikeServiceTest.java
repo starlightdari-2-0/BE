@@ -5,7 +5,7 @@ import com.example.startlight.member.dao.MemberDao;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
-import com.example.startlight.memory.starReaction.entity.ReactionType;
+import com.example.startlight.global.entity.ReactionType;
 import com.example.startlight.memory.starReaction.entity.StarReaction;
 import com.example.startlight.memory.starReaction.repository.StarReactionRepository;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,6 @@ import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

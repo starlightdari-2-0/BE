@@ -1,4 +1,4 @@
-package com.example.startlight.memory.memComment.dto;
+package com.example.startlight.global.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class MemCommentRepDto {
+public class CommentRepDto {
     private Long comment_id;
     private Long memory_id;
     private String content;

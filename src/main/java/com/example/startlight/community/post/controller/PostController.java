@@ -1,12 +1,9 @@
 package com.example.startlight.community.post.controller;
 
-import com.example.startlight.community.post.dto.PostRequestDto;
-import com.example.startlight.community.post.dto.PostDetailedRepDto;
-import com.example.startlight.community.post.dto.PostResponseDto;
-import com.example.startlight.community.post.dto.PostUpdateReqDto;
+import com.example.startlight.community.post.dto.*;
+import com.example.startlight.community.post.entity.Category;
 import com.example.startlight.community.post.service.PostService;
-import com.example.startlight.community.postComment.dto.PostCommentRepDto;
-import com.example.startlight.community.postComment.service.PostCommentService;
+import com.example.startlight.global.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +17,10 @@ import java.util.List;
 @RequestMapping("/post")
 public class PostController {
     private final PostService postService;
-    private final PostCommentService postCommentService;
 
     @PostMapping()
-    public ResponseEntity<PostDetailedRepDto> create(@ModelAttribute PostRequestDto postRequestDto) throws IOException {
-        PostDetailedRepDto post = postService.createPost(postRequestDto);
+    public ResponseEntity<PostResponseDto> create(@ModelAttribute PostRequestDto postRequestDto) throws IOException {
+        PostResponseDto post = postService.createPost(postRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(post);
     }
 
@@ -40,11 +36,11 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
-    @PatchMapping()
-    public ResponseEntity<PostDetailedRepDto> update(@ModelAttribute PostUpdateReqDto postRequestDto) throws IOException {
-        PostDetailedRepDto postDetailedRepDto = postService.updatePost(postRequestDto);
-        return ResponseEntity.status(HttpStatus.OK).body(postDetailedRepDto);
-    }
+//    @PatchMapping()
+//    public ResponseEntity<PostDetailedRepDto> update(@ModelAttribute PostUpdateReqDto postRequestDto) throws IOException {
+//        PostDetailedRepDto postDetailedRepDto = postService.updatePost(postRequestDto);
+//        return ResponseEntity.status(HttpStatus.OK).body(postDetailedRepDto);
+//    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable Long id){
@@ -52,9 +48,14 @@ public class PostController {
         return ResponseEntity.status(HttpStatus.OK).body("Successfully deleted post id : " + id);
     }
 
-    @GetMapping("/{postId}/comments")
-    public ResponseEntity<List<PostCommentRepDto>> getAllPostComment(@PathVariable Long postId) {
-        List<PostCommentRepDto> allComments = postCommentService.getAllComments(postId);
-        return ResponseEntity.status(HttpStatus.OK).body(allComments);
+    @GetMapping("/all")
+    public ResponseEntity<PageResponse<PostRepDto>> getPublicStars(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(required = false) Category category
+    ) {
+        PageResponse<PostRepDto> posts = postService.getPosts(page, size, category);
+        return ResponseEntity.ok(posts);
     }
+
 }

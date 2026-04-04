@@ -1,6 +1,6 @@
 package com.example.startlight.memory.starReaction.repository;
 
-import com.example.startlight.memory.starReaction.entity.ReactionType;
+import com.example.startlight.global.entity.ReactionType;
 import com.example.startlight.memory.starReaction.entity.StarReaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

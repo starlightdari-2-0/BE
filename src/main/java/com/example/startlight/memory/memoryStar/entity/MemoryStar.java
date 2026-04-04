@@ -2,7 +2,7 @@ package com.example.startlight.memory.memoryStar.entity;
 
 import com.example.startlight.memory.memComment.entity.MemComment;
 import com.example.startlight.memory.memoryStar.dto.MemoryStarUpdateDto;
-import com.example.startlight.memory.starReaction.entity.ReactionType;
+import com.example.startlight.global.entity.ReactionType;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;

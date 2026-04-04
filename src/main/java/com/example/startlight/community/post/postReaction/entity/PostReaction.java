@@ -1,5 +1,6 @@
-package com.example.startlight.memory.starReaction.entity;
+package com.example.startlight.community.post.postReaction.entity;
 
+import com.example.startlight.community.post.entity.Post;
 import com.example.startlight.global.entity.ReactionType;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
@@ -10,25 +11,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "star_reaction",
+@Table(name = "post_reaction",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_star_reaction_star_user_type",
-                        columnNames = {"star_id", "member_id", "reaction_type"}
+                        name = "uk_post_reaction_post_user_type",
+                        columnNames = {"post_id", "member_id", "reaction_type"}
                 )
         })
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Getter
-public class StarReaction {
+public class PostReaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memory_id", nullable = false)
-    private MemoryStar memoryStar;
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)

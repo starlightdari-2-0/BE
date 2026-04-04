@@ -1,11 +1,11 @@
 package com.example.startlight.memory.memComment.service;
 
+import com.example.startlight.global.dto.CommentRepDto;
+import com.example.startlight.global.dto.CommentReqDto;
+import com.example.startlight.global.dto.CommentUpdateReqDto;
 import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.likes.service.LikesService;
 import com.example.startlight.memory.memComment.dao.MemCommentDao;
-import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
-import com.example.startlight.memory.memComment.dto.MemCommentReqDto;
-import com.example.startlight.memory.memComment.dto.MemCommentUpdateReqDto;
 import com.example.startlight.global.response.PageResponse;
 import com.example.startlight.memory.memComment.entity.MemComment;
 import com.example.startlight.memory.memComment.mapper.MemCommentMapper;
@@ -29,7 +29,7 @@ public class MemCommentService {
     private final MemberDao memberDao;
     private final LikesService likesService;
 
-    public MemCommentRepDto saveMemComment(MemCommentReqDto memCommentReqDto) {
+    public CommentRepDto saveMemComment(CommentReqDto memCommentReqDto) {
         Long userId = UserUtil.getCurrentUserId();
         String stNickname = memberDao.selectMember(userId).getSt_nickname();
         MemoryStar memoryStar = memoryStarDao.selectMemoryStarById(memCommentReqDto.getMemory_id());
@@ -53,7 +53,7 @@ public class MemCommentService {
         return mapper.toDto(memComment1);
     }
 
-    public MemCommentRepDto updateMemComment(MemCommentUpdateReqDto dto) {
+    public CommentRepDto updateMemComment(CommentUpdateReqDto dto) {
         Long userId = UserUtil.getCurrentUserId();
         MemComment memComment = memCommentDao.update(dto.getComment_id(), userId, dto.getContent());
         return mapper.toDto(memComment);
@@ -64,10 +64,10 @@ public class MemCommentService {
         memCommentDao.delete(userId, comment_id);
     }
 
-    public PageResponse<MemCommentRepDto> findParentCommentByMemoryId(Long memory_id, int page) {
+    public PageResponse<CommentRepDto> findParentCommentByMemoryId(Long memory_id, int page) {
         Page<MemComment> commentPage = memCommentDao.findParentCommentByMemoryId(memory_id, page);
-        Page<MemCommentRepDto> dtoPage = commentPage.map(mapper::toDto);
-        List<MemCommentRepDto> contentWithFlag = dtoPage.getContent().stream()
+        Page<CommentRepDto> dtoPage = commentPage.map(mapper::toDto);
+        List<CommentRepDto> contentWithFlag = dtoPage.getContent().stream()
                 .peek(dto -> {
                     boolean mine = checkIfMine(dto.getComment_id());
                     dto.setMine(mine);
@@ -93,7 +93,7 @@ public class MemCommentService {
         );
     }
 
-    public List<MemCommentRepDto> findAllByMemoryId(Long memory_id) {
+    public List<CommentRepDto> findAllByMemoryId(Long memory_id) {
         List<MemComment> allByMemoryId = memCommentDao.findAllByMemoryId(memory_id);
         return allByMemoryId.stream().map(mapper::toDto).collect(Collectors.toList());
     }
@@ -104,10 +104,10 @@ public class MemCommentService {
         return userId.equals(memComment.getWriter_id());
     }
 
-    public List<MemCommentRepDto> findChildrenCommentByCommentId(Long comment_id) {
+    public List<CommentRepDto> findChildrenCommentByCommentId(Long comment_id) {
         List<MemComment> comments = memCommentDao.findChildrenCommentByCommentId(comment_id);
-        List<MemCommentRepDto> commentRepDtos = comments.stream().map(mapper::toDto).toList();
-        for (MemCommentRepDto commentRepDto : commentRepDtos) {
+        List<CommentRepDto> commentRepDtos = comments.stream().map(mapper::toDto).toList();
+        for (CommentRepDto commentRepDto : commentRepDtos) {
             commentRepDto.setMine(checkIfMine(commentRepDto.getComment_id()));
             Long likeCount = likesService.getLikeCount(commentRepDto.getComment_id());
             commentRepDto.setLike_count(likeCount);
