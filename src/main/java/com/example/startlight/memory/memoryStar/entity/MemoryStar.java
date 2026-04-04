@@ -3,6 +3,7 @@ package com.example.startlight.memory.memoryStar.entity;
 import com.example.startlight.memory.memComment.entity.MemComment;
 import com.example.startlight.memory.memoryStar.dto.MemoryStarUpdateDto;
 import com.example.startlight.global.entity.ReactionType;
+import com.example.startlight.pet.entity.Pet;
 import jakarta.persistence.*;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -34,9 +35,6 @@ public class MemoryStar {
 
     @Column(nullable = false)
     private String writer_name;
-
-    @Column(nullable = false)
-    private Long pet_id;
 
     @Column(nullable = false)
     private String name;
@@ -73,8 +71,12 @@ public class MemoryStar {
     @Setter
     private String img_url;
 
-    @OneToMany
+    @OneToMany(mappedBy = "memoryStar")
     private List<MemComment> memComments;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id", nullable = false)
+    private Pet pet;
     
     public void updateMemoryStar(MemoryStarUpdateDto dto) {
         this.name = dto.getName();
