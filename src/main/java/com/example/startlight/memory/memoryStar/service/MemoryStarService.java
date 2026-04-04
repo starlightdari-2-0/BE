@@ -1,9 +1,8 @@
 package com.example.startlight.memory.memoryStar.service;
 
+import com.example.startlight.global.dto.CommentRepDto;
 import com.example.startlight.infra.kakao.util.UserUtil;
 import com.example.startlight.member.dto.ActivityPostDto;
-import com.example.startlight.member.repository.MemberRepository;
-import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
 import com.example.startlight.memory.memComment.service.MemCommentService;
 import com.example.startlight.member.dao.MemberDao;
 import com.example.startlight.member.entity.Member;
@@ -14,7 +13,6 @@ import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import com.example.startlight.memory.memoryStar.mapper.MemoryStarMapper;
 import com.example.startlight.infra.s3.service.S3Service;
 import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
-import com.example.startlight.memory.starReaction.repository.StarReactionRepository;
 import com.example.startlight.pet.repository.PetRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -61,7 +59,7 @@ public class MemoryStarService {
             memoryStar.setImg_url(uploadMemoryImg);
         }
         MemoryStarRepDto dto = mapper.toDto(memoryStar);
-        List<MemCommentRepDto> allByMemoryId = memCommentService.findAllByMemoryId(memoryStar.getMemory_id());
+        List<CommentRepDto> allByMemoryId = memCommentService.findAllByMemoryId(memoryStar.getMemory_id());
 
         return MemoryStarRepWithComDto.builder()
                 .memoryStarRepDto(dto)

@@ -5,6 +5,7 @@ import com.example.startlight.likes.dao.LikesDao;
 import com.example.startlight.likes.entity.Likes;
 import com.example.startlight.likes.repository.LikesRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +17,12 @@ public class LikesService {
     public boolean createLike(Long commentId) {
         Long userId = UserUtil.getCurrentUserId();
         likesDao.createReplyLike(userId, commentId);
+        return true;
+    }
+
+    public boolean createPostCommentLike(Long commentId) {
+        Long userId = UserUtil.getCurrentUserId();
+        likesDao.createPostReplyLike(userId, commentId);
         return true;
     }
 

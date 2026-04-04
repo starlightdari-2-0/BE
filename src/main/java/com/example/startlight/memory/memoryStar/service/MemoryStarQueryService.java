@@ -12,7 +12,7 @@ import com.example.startlight.memory.memoryStar.dto.ReactionDto;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import com.example.startlight.memory.memoryStar.mapper.MemoryStarMapper;
 import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
-import com.example.startlight.memory.starReaction.entity.ReactionType;
+import com.example.startlight.global.entity.ReactionType;
 import com.example.startlight.memory.starReaction.entity.StarReaction;
 import com.example.startlight.memory.starReaction.repository.StarReactionRepository;
 import jakarta.transaction.Transactional;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -62,7 +61,6 @@ public class MemoryStarQueryService {
     @Transactional
     public PageResponse<MemoryStarPublicRepDto> getPublicStars(int page, int size, AnimalCategory category) {
         Pageable pageable = PageRequest.of(page, size);
-        log.info("category={}", category);
         Page<MemoryStar> stars = memoryStarRepository.findByIsPublicTrueOrderByCreatedAtDesc(category, pageable);
 
         Long userId = UserUtil.getCurrentUserId();

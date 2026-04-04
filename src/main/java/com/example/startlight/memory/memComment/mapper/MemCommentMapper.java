@@ -1,6 +1,6 @@
 package com.example.startlight.memory.memComment.mapper;
 
-import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
+import com.example.startlight.global.dto.CommentRepDto;
 import com.example.startlight.memory.memComment.entity.MemComment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,8 +11,8 @@ public interface MemCommentMapper {
     MemCommentMapper INSTANCE = Mappers.getMapper(MemCommentMapper.class);
 
     @Mapping(source = "memoryStar.memory_id", target = "memory_id")
-    MemCommentRepDto toDto(MemComment memComment);
+    CommentRepDto toDto(MemComment memComment);
 
     @Mapping(target = "memoryStar", ignore = true)
-    MemComment toEntity(MemCommentRepDto memCommentRepDto);
+    MemComment toEntity(CommentRepDto memCommentRepDto);
 }

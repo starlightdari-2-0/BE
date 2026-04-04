@@ -5,7 +5,7 @@ import com.example.startlight.member.dao.MemberDao;
 import com.example.startlight.member.entity.Member;
 import com.example.startlight.memory.memoryStar.entity.MemoryStar;
 import com.example.startlight.memory.memoryStar.repository.MemoryStarRepository;
-import com.example.startlight.memory.starReaction.entity.ReactionType;
+import com.example.startlight.global.entity.ReactionType;
 import com.example.startlight.memory.starReaction.entity.StarReaction;
 import com.example.startlight.memory.starReaction.repository.StarReactionRepository;
 import lombok.RequiredArgsConstructor;

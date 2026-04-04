@@ -1,9 +1,9 @@
 package com.example.startlight.memory.memComment.controller;
 
+import com.example.startlight.global.dto.CommentRepDto;
+import com.example.startlight.global.dto.CommentReqDto;
+import com.example.startlight.global.dto.CommentUpdateReqDto;
 import com.example.startlight.likes.service.LikesService;
-import com.example.startlight.memory.memComment.dto.MemCommentRepDto;
-import com.example.startlight.memory.memComment.dto.MemCommentReqDto;
-import com.example.startlight.memory.memComment.dto.MemCommentUpdateReqDto;
 import com.example.startlight.global.response.PageResponse;
 import com.example.startlight.memory.memComment.service.MemCommentService;
 import lombok.RequiredArgsConstructor;
@@ -20,29 +20,29 @@ public class MemCommentController {
     private final LikesService likesService;
 
     @GetMapping("/memory-stars/{memoryId}/comments")
-    public ResponseEntity<PageResponse<MemCommentRepDto>> getMemComment(
+    public ResponseEntity<PageResponse<CommentRepDto>> getMemComment(
             @PathVariable("memoryId") Long memoryId,
             @RequestParam(defaultValue = "0") int page) {
-        PageResponse<MemCommentRepDto> allByMemoryId = memCommentService.findParentCommentByMemoryId(memoryId, page);
+        PageResponse<CommentRepDto> allByMemoryId = memCommentService.findParentCommentByMemoryId(memoryId, page);
         return ResponseEntity.status(HttpStatus.OK).body(allByMemoryId);
     }
 
     @GetMapping("/memory-comments/{commentId}/replies")
-    public ResponseEntity<List<MemCommentRepDto>> getMemCommentChildren(
+    public ResponseEntity<List<CommentRepDto>> getMemCommentChildren(
             @PathVariable("commentId") Long commentId) {
-        List<MemCommentRepDto> comments = memCommentService.findChildrenCommentByCommentId(commentId);
+        List<CommentRepDto> comments = memCommentService.findChildrenCommentByCommentId(commentId);
         return ResponseEntity.status(HttpStatus.OK).body(comments);
     }
 
     @PostMapping("/memory-comments")
-    public ResponseEntity<MemCommentRepDto> createMemComment(@RequestBody MemCommentReqDto memCommentReqDto) {
-        MemCommentRepDto memCommentRepDto = memCommentService.saveMemComment(memCommentReqDto);
+    public ResponseEntity<CommentRepDto> createMemComment(@RequestBody CommentReqDto memCommentReqDto) {
+        CommentRepDto memCommentRepDto = memCommentService.saveMemComment(memCommentReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
     }
 
     @PutMapping("/memory-comments")
-    public ResponseEntity<MemCommentRepDto> updateMemComment(@RequestBody MemCommentUpdateReqDto memCommentReqDto) {
-        MemCommentRepDto memCommentRepDto = memCommentService.updateMemComment(memCommentReqDto);
+    public ResponseEntity<CommentRepDto> updateMemComment(@RequestBody CommentUpdateReqDto memCommentReqDto) {
+        CommentRepDto memCommentRepDto = memCommentService.updateMemComment(memCommentReqDto);
         return ResponseEntity.status(HttpStatus.OK).body(memCommentRepDto);
     }
 

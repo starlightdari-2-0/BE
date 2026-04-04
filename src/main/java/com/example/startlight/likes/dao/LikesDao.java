@@ -27,4 +27,12 @@ public class LikesDao {
        Likes likes = likesRepository.findLikesByMember_idAndTarget_id(userId, targetId);
        likesRepository.delete(likes);
    }
+
+   public Likes createPostReplyLike(Long userId, Long commentId) {
+       Likes likes = Likes.builder()
+               .target_type(TargetType.COMMUNITY_REPLY_LIKE)
+               .target_id(commentId)
+               .member_id(userId).build();
+       return likesRepository.save(likes);
+   }
 }
