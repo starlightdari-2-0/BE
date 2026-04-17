@@ -117,7 +117,9 @@ public class PostService {
     @Transactional
     public PageResponse<PostRepDto> getPosts(int page, int size, Category category) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<Post> posts = postRepository.findByCategorySorted(category, pageable);
+        Page<Post> posts = (category == null)
+                ? postRepository.findAllOrderByUpdatedAtDesc(pageable)
+                : postRepository.findByCategoryOrderByUpdatedAtDesc(category, pageable);
 
         Long userId = UserUtil.getCurrentUserId();
 
