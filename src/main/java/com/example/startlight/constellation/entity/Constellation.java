@@ -5,7 +5,10 @@ import lombok.Getter;
 
 @Entity
 @Getter
-@Table(name = "constellation")
+@Table(
+        name = "constellation",
+        indexes = @Index(name="idx_animal_type_id", columnList = "animal_type_id")
+)
 public class Constellation {
     @Id
     private Long con_id;
