@@ -22,9 +22,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
         select p
         from Post p
-        where (:category is null or :category = p.category)
+        where p.category = :category
         order by p.updatedAt desc
     """)
-    Page<Post> findByCategorySorted(@Param("category") Category category, Pageable pageable);
+    Page<Post> findByCategoryOrderByUpdatedAtDesc(@Param("category") Category category, Pageable pageable);
+
+    @Query("""
+        select p
+        from Post p
+        order by p.updatedAt desc
+    """)
+    Page<Post> findAllOrderByUpdatedAtDesc(Pageable pageable);
+
 }
 

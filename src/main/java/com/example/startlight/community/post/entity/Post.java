@@ -18,7 +18,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "Post")
+@Table(
+        name = "post",
+        indexes = {
+                @Index(name = "idx_post_updated_at", columnList = "updated_at"),
+                @Index(name = "idx_post_category_updated_at", columnList = "category, updated_at")
+        }
+)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,6 +41,7 @@ public class Post {
     private String content;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Builder.Default
@@ -58,6 +65,7 @@ public class Post {
     private String img_url;
 
     @LastModifiedDate
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Builder.Default
