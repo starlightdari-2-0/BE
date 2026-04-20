@@ -138,10 +138,10 @@ public class KakaoOauthController{
             }
 
             // 2. Refresh Token 유효성 검증
-            if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "Invalid or expired refresh token"));
-            }
+//            if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
+//                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+//                        .body(Map.of("error", "Invalid or expired refresh token"));
+//            }
 
             // 3. 카카오 액세스 토큰 추출 (기존 Access Token에서)
             String kakaoAccessToken = null;
