@@ -34,18 +34,13 @@ public class JWTUtils {
     private static final Duration REFRESH_TOKEN_VALIDITY_REMEMBER = Duration.ofDays(30);
 
     private final Key key;
-//    private final RedisTemplate<String, String> redisTemplate;
-//
-//    public JWTUtils(
-//            @Value("${app.jwtSecret}") String secret,
-//            RedisTemplate<String, String> redisTemplate) {
-//        this.key = Keys.hmacShaKeyFor(secret.getBytes());
-//        this.redisTemplate = redisTemplate;
-//    }
+    private final RedisTemplate<String, String> redisTemplate;
 
     public JWTUtils(
-            @Value("${app.jwtSecret}") String secret) {
+            @Value("${app.jwtSecret}") String secret,
+            RedisTemplate<String, String> redisTemplate) {
         this.key = Keys.hmacShaKeyFor(secret.getBytes());
+        this.redisTemplate = redisTemplate;
     }
 
     /**
@@ -97,13 +92,13 @@ public class JWTUtils {
                 .compact();
 
         // Redis에 저장: key = "RT:{userId}", value = refreshToken
-//        String redisKey = "RT:" + userId;
-//        redisTemplate.opsForValue().set(
-//                redisKey,
-//                refreshToken,
-//                validity.toMillis(),
-//                TimeUnit.MILLISECONDS
-//        );
+        String redisKey = "RT:" + userId;
+        redisTemplate.opsForValue().set(
+                redisKey,
+                refreshToken,
+                validity.toMillis(),
+                TimeUnit.MILLISECONDS
+        );
 
         logger.info("Refresh token stored in Redis for user: {}", userId);
         return refreshToken;
@@ -182,10 +177,10 @@ public class JWTUtils {
             String redisKey = "RT:" + userId;
 
             // Redis에서 저장된 Refresh Token과 비교
-//            String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
-//            if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
-//                throw new RuntimeException("Invalid refresh token");
-//            }
+            String storedRefreshToken = redisTemplate.opsForValue().get(redisKey);
+            if (storedRefreshToken == null || !storedRefreshToken.equals(refreshToken)) {
+                throw new RuntimeException("Invalid refresh token");
+            }
 
             // 새로운 Access Token 발급
             long now = (new Date()).getTime();
@@ -213,31 +208,31 @@ public class JWTUtils {
      */
     public void deleteRefreshToken(Long userId) {
         String redisKey = "RT:" + userId;
-        //edisTemplate.delete(redisKey);
+        redisTemplate.delete(redisKey);
         logger.info("Refresh token deleted for user: {}", userId);
     }
 
     /**
      * Refresh Token 유효성 검증
      */
-//    public boolean validateRefreshToken(String refreshToken) {
-//        try {
-//            Claims claims = Jwts.parserBuilder()
-//                    .setSigningKey(key)
-//                    .setAllowedClockSkewSeconds(60)
-//                    .build()
-//                    .parseClaimsJws(refreshToken)
-//                    .getBody();
-//
-//            Long userId = Long.parseLong(claims.getSubject());
-//            String redisKey = "RT:" + userId;
-//            String storedToken = redisTemplate.opsForValue().get(redisKey);
-//
-//            return storedToken != null && storedToken.equals(refreshToken);
-//        } catch (JwtException e) {
-//            return false;
-//        }
-//    }
+    public boolean validateRefreshToken(String refreshToken) {
+        try {
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .setAllowedClockSkewSeconds(60)
+                    .build()
+                    .parseClaimsJws(refreshToken)
+                    .getBody();
+
+            Long userId = Long.parseLong(claims.getSubject());
+            String redisKey = "RT:" + userId;
+            String storedToken = redisTemplate.opsForValue().get(redisKey);
+
+            return storedToken != null && storedToken.equals(refreshToken);
+        } catch (JwtException e) {
+            return false;
+        }
+    }
 
     public String extractKakaoAccessToken(String token) {
         try {
